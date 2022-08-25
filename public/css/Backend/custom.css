@@ -1,0 +1,47 @@
+.preview-img {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.imageThumb {
+    max-height: 250px;
+    width: 500px;
+    margin-bottom: 20px;
+}
+
+.remove-que-img {
+    position: absolute;
+    top: 8%;
+    right: 57%;
+    background: #0807078a;
+    width: 30px;
+    height: 30px;
+    line-height: 16px;
+    /* margin: 0px auto; */
+    text-align: center;
+}
+
+.remove-que-img:hover{
+    background: #007bff;
+    color: #fff !important;
+}
+
+.remove-opt-img {
+    position: absolute;
+    top: 22%;
+    right: 2%;
+    background: #0807078a;
+    width: 30px;
+    height: 30px;
+    line-height: 15px;
+    text-align: center;
+}
+
+.remove-opt-img:hover {
+    background: #007bffd1;
+    color: #fff !important;
+}
+
+/* ._single_ans_img {
+    display: none;
+} */
