@@ -32,7 +32,7 @@ export default function Profile(props){
     const onPrsubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(document.getElementById("prfrom"));
-        const config = { headers: { 'content-type': 'application/json', 'x-inertia': 'true' } };
+        const config = { headers: { 'content-type': 'application/json', 'x-inertia': 'true' ,'enctype': 'multipart/form-data'} };
         axios.post('/profile/update', formData, config)
         .then(res => {
             setStatus(res.data.success);
@@ -45,7 +45,7 @@ export default function Profile(props){
     const onCpsubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(document.getElementById("cpfrom"));
-        const config = { headers: { 'content-type': 'application/json', 'x-inertia': 'true' } };
+        const config = { headers: { 'content-type': 'application/json', 'x-inertia': 'true' ,'enctype': 'multipart/form-data'} };
         axios.post('/profile/changepassword', formData, config)
         .then(res => {
             setStatus(res.data.success);
@@ -85,7 +85,7 @@ export default function Profile(props){
                                 {/* Personal Information from : prfrom */}
                                 {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
                                 <ValidationErrors errors={errors} />
-                                <form onSubmit={onPrsubmit}  id="prfrom" enctype="multipart/form-data">
+                                <form onSubmit={onPrsubmit}  id="prfrom">
                                     {/* <Card>
                                         <Card.Body> */}
                                             <input type="hidden" name='id' value={users.id} />
@@ -114,7 +114,7 @@ export default function Profile(props){
                             <Accordion.Body>
                                 {/* change password from : cpfrom */}
                                 <ValidationErrors errors={errors} />
-                                <form onSubmit={onCpsubmit} id="cpfrom" enctype="multipart/form-data" >
+                                <form onSubmit={onCpsubmit} id="cpfrom">
                                     {/* <Card>
                                         <Card.Body> */}
                                             <input type="hidden" name='id' value={users.id} />
