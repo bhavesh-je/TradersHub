@@ -7,45 +7,29 @@ import axios from 'axios';
 import { Link, Head } from '@inertiajs/inertia-react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import 'font-awesome/css/font-awesome.min.css';
-import "datatables.net-dt/js/dataTables.dataTables"
-import "datatables.net-dt/css/jquery.dataTables.min.css"
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from 'jquery'; 
 import SpotifyPlayer from 'react-spotify-player';
 
-
-export default function Signals(props){
-    const [users, setUsers] = useState([]);
-
-    const signals = props.signals;
-    const totalQuery = props.totalQuery[0].total_signals;
-    const totalWonQuery = props.totalWonQuery[0].total_signals_won;
-    const totalLostQuery = props.totalLostQuery[0].total_signals_lost;
-    const totalOngoingQuery = props.totalOngoingQuery[0].total_signals_ongoing;
-    const winRate = props.winRate;
-    const pips = props.pips;
-
-    const size = {
-        width: '100%',
-        height: 300,
-      };
-      const view = 'coverart'; // or 'coverart'
-      const theme = 'black'; // or 'white'
-
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
-        const res = await fetch("https://randomuser.me/api/?results=10");
-        const data = await res.json();
-        try {
-            setUsers(data.results);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-   useEffect(() => {
+class Signals extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            users: [],
+            signals: this.props.signals,
+            totalQuery: this.props.totalQuery[0].total_signals,
+            totalWonQuery: this.props.totalWonQuery[0].total_signals_won,
+            totalLostQuery: this.props.totalLostQuery[0].total_signals_lost,
+            totalOngoingQuery: this.props.totalOngoingQuery[0].total_signals_ongoing,
+            winRate: this.props.winRate,
+            pips: this.props.pips,
+            // size: ["width" = '100%',"height" = 300],
+        };
+    }
+    
+    componentDidMount(){
+        this.fetchUsers();
         setTimeout(()=>{
             $(".signal_table").DataTable({
                 destroy: true,
@@ -62,12 +46,32 @@ export default function Signals(props){
             pageLength: 10,
         });
         },1000)
-    }, [])
+    }
 
-    return (
-        <Authenticated
-            auth={props.auth}
-            errors={props.errors}
+    recommended(nextProps){}
+
+    fetchUsersWithFetchAPI = async () => {
+        const res = await fetch("https://randomuser.me/api/?results=10");
+        const data = await res.json();
+        try {
+            // setUsers(data.results);
+            this.setState({users: data.results});
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    fetchUsers = this.fetchUsersWithFetchAPI;
+    
+    render(){
+        var size = {width: '100%',height: 300};
+        var view = 'coverart';
+        var theme = 'black';
+        
+        return(
+            <Authenticated
+            auth={this.props.auth}
+            errors={this.props.errors}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Signals</h2>}
         >
             <Head title="Signals" />
@@ -79,7 +83,7 @@ export default function Signals(props){
                                 <Card.Body className="text-center fu-bg-info">
                                     <SpotifyPlayer
                                     uri="spotify:album:1TIUsv8qmYLpBEhvmBmyBk"
-                                    size={size}
+                                    size={this.state.size}
                                     view={view}
                                     theme={theme}
                                     />
@@ -92,7 +96,7 @@ export default function Signals(props){
                         <Col lg={2} xs={6}>
                             <Card className="text-center">
                                 <Card.Body className="text-center fu-bg-info">
-                                    <h4 className="font-semibold text-gray-800 leading-tight">{totalQuery}</h4>
+                                    <h4 className="font-semibold text-gray-800 leading-tight">{this.state.totalQuery}</h4>
                                     Total signal
                                 </Card.Body>
                             </Card>
@@ -100,7 +104,7 @@ export default function Signals(props){
                         <Col lg={2} xs={6}>
                             <Card className="text-center">
                                     <Card.Body className="text-center fu-bg-success">
-                                    <h4 className="font-semibold text-gray-800 leading-tight">{totalWonQuery}</h4>
+                                    <h4 className="font-semibold text-gray-800 leading-tight">{this.state.totalWonQuery}</h4>
                                     Trades Won
                                 </Card.Body>
                             </Card>
@@ -108,7 +112,7 @@ export default function Signals(props){
                         <Col lg={2} xs={6}>
                             <Card className="text-center">
                                     <Card.Body className="text-center fu-bg-warning">
-                                    <h4 className="font-semibold text-gray-800 leading-tight">{totalLostQuery}</h4>
+                                    <h4 className="font-semibold text-gray-800 leading-tight">{this.state.totalLostQuery}</h4>
                                     Trades Lost
                                 </Card.Body>
                             </Card>
@@ -116,7 +120,7 @@ export default function Signals(props){
                         <Col lg={2} xs={6}>
                             <Card className="text-center">
                                     <Card.Body className="text-center fu-bg-danger">
-                                    <h4 className="font-semibold text-gray-800 leading-tight">{totalOngoingQuery}</h4>
+                                    <h4 className="font-semibold text-gray-800 leading-tight">{this.state.totalOngoingQuery}</h4>
                                     Ongoing Trades
                                 </Card.Body>
                             </Card>
@@ -124,7 +128,7 @@ export default function Signals(props){
                         <Col lg={2} xs={6}>
                             <Card className="text-center">
                                     <Card.Body className="text-center fu-bg-info">
-                                    <h4 className="font-semibold text-gray-800 leading-tight">{winRate}%</h4>
+                                    <h4 className="font-semibold text-gray-800 leading-tight">{this.state.winRate}%</h4>
                                     Win Rate
                                 </Card.Body>
                             </Card>
@@ -132,7 +136,7 @@ export default function Signals(props){
                         <Col lg={2} xs={6}>
                             <Card className="text-center">
                                     <Card.Body className="text-center fu-bg-success">
-                                    <h4 className="font-semibold text-gray-800 leading-tight">{pips}</h4>
+                                    <h4 className="font-semibold text-gray-800 leading-tight">{this.state.pips}</h4>
                                     Total Pips
                                 </Card.Body>
                             </Card>
@@ -158,7 +162,7 @@ export default function Signals(props){
                                 </tr>
                             </thead>
                             <tbody>
-                            {signals.map((signal, index) => (
+                            {this.state.signals.map((signal, index) => (
                                 <tr>
                                     <td>{signal.pair_name}</td>
                                     <td>{signal.trade_type}</td>
@@ -179,5 +183,7 @@ export default function Signals(props){
                 </Container>
             </div>
         </Authenticated>
-    );    
+        );
+    }
 }
+export default Signals;

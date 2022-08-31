@@ -47,7 +47,7 @@ class QuestionControler extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $this->validate($request,[
+        $validate = $this->validate($request, [
             'topic_id' => 'required',
             'question' => 'required|max:250',
             'que_img' => 'nullable|mimes:jpeg,png,jpg|max:2048',
@@ -63,14 +63,14 @@ class QuestionControler extends Controller
 
         // dd($createQuestion);
 
-        if( $request->file('que_img') != null ){
+        if ($request->file('que_img') != null) {
             $file = $request->file('que_img');
-            $filename = 'que_'.time().'.'.$file->extension();
+            $filename = 'que_' . time() . '.' . $file->extension();
             $file->move(public_path('uploads/que-img'), $filename);
             $createQuestion['que_img'] = $filename;
             // $items->image = $filename;
         }
-        
+
         Question::create($createQuestion);
         return redirect()->route('questions.index')->with('success', 'Question created successfully');
     }
@@ -113,7 +113,7 @@ class QuestionControler extends Controller
     public function update(Request $request, $id)
     {
         //
-        $validate = $this->validate($request,[
+        $validate = $this->validate($request, [
             'topic_id' => 'required',
             'question' => 'required|max:250',
             'que_img' => 'nullable|mimes:jpeg,png,jpg|max:2048'
@@ -127,15 +127,15 @@ class QuestionControler extends Controller
         ];
         // $topic_name = 
 
-        if( $request->file('que_img') != null ){
+        if ($request->file('que_img') != null) {
             $file = $request->file('que_img');
-            $filename = 'que_'.time().'.'.$file->extension();
+            $filename = 'que_' . time() . '.' . $file->extension();
             $file->move(public_path('uploads/que-img'), $filename);
             $updateQuestion['que_img'] = $filename;
         }
 
         Question::where('id', $id)->update($updateQuestion);
-        
+
         return redirect()->route('questions.index')->with('success', 'Question updated successfully');
     }
 
@@ -151,43 +151,42 @@ class QuestionControler extends Controller
         $question = Question::with('topics')->findOrFail($id);
         $topic_id = $question->topics->id;
         $opts = Option::where('que_id', $id)->where('topic_id', $topic_id)->get();
-        foreach( $opts as $key => $opt )
-        {
+        foreach ($opts as $key => $opt) {
             $answer = Answer::where('opt_id', $opt->id)->where('que_id', $id)->where('topic_id', $topic_id)->get();
-            if( count($answer) > 0 )
-            {
+            if (count($answer) > 0) {
                 Answer::where('opt_id', $opt->id)->delete();
             }
             Option::where('id', $opt->id)->delete();
         }
-        Question::where('id', $id)->delete();    
+        Question::where('id', $id)->delete();
         // $ans = Option::with('answers')->where('que_id', $id)->where('topic_id', $topic_id)->delete();
         return redirect()->route('questions.index')->with('success', 'Question deleted successfully.');
     }
 
-    public function getTopics( Request $request ) {
+    public function getTopics(Request $request)
+    {
         // dd($request);
         // if($request->ajax()){
-            $search = trim($request->search);
-            $response = [];
+        $search = trim($request->search);
+        $response = [];
 
-            if( $search == '' ) {
-                $topics = Topic::orderBy('topic_name','desc')
-                ->select('id','topic_name')
+        if ($search == '') {
+            $topics = Topic::orderBy('topic_name', 'desc')
+                ->select('id', 'topic_name')
                 ->limt(5)
                 ->get();
-            } else {
-                $topics = Topic::select('id','topic_name')
-                ->where('topic_name', 'LIKE', '%'.$search.'%')
+        } else {
+            $topics = Topic::select('id', 'topic_name')
+                ->where('topic_name', 'LIKE', '%' . $search . '%')
                 ->get();
-            }
-            foreach($topics as $topic) {
-                $response[] = array(
-                    'id' => $topic->id,
-                    'topic_name' => $topic->topic_name
-                );
-            }
-            return response()->json($response); 
+        }
+        foreach ($topics as $topic) {
+            $response[] = array(
+                'id' => $topic->id,
+                'topic_name' => $topic->topic_name
+            );
+        }
+        return response()->json($response);
         // }
     }
 }

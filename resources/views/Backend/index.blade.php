@@ -1,7 +1,7 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">Roles</li>
+    <li class="breadcrumb-item"><a href="dashboard">Home</a></li>
+    <li class="breadcrumb-item active">Dashboard</li>
 @endsection
 
 @section('content')

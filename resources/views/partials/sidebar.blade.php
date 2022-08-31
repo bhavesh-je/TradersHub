@@ -44,19 +44,19 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="./index.html" class="nav-link">
+              <a href="/admin/dashboard" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Dashboard v1</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="./index2.html" class="nav-link">
+              <a href="/admin/dashboard" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Dashboard v2</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="./index3.html" class="nav-link active">
+              <a href="/admin/dashboard" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Dashboard v3</p>
               </a>
@@ -99,7 +99,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="{{ route('meetings.index') }}" class="nav-link">
+          <a href="{{ route('meetings.index') }}" class="nav-link {{ (request()->segment(2) == 'meetings') ? 'active' : ''}}">
             <i class="nav-icon fas fa-video"></i>
             <p>Meetings</p>
           </a>
@@ -107,7 +107,7 @@
 
         <li class="nav-header"><strong>POST</strong></li>
         <li class="nav-item">
-          <a href="{{ route('posts.index') }}" class="nav-link">
+          <a href="{{ route('posts.index') }}" class="nav-link {{ (request()->segment(2) == 'posts') ? 'active' : ''}}">
             <i class="nav-icon fas fa-clipboard"></i>
             <p>Posts</p>
           </a>
@@ -115,7 +115,7 @@
 
         <li class="nav-header"><strong>Video</strong></li>
         <li class="nav-item">
-          <a href="{{ route('video-post.index') }}" class="nav-link">
+          <a href="{{ route('video-post.index') }}" class="nav-link {{ (request()->segment(2) == 'video-post') ? 'active' : ''}}">
             <i class="nav-icon fab fa-youtube"></i>
             <p>Video post</p>
           </a>

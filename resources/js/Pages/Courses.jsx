@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Container, Row, Col, Button, Card, CardGroup } from 'react-bootstrap';
 import { Link, Head } from '@inertiajs/inertia-react';
 import moment from 'moment';
 
-export default function Courses(props){
-    const courses = props.cources;
-    const MAX_LENGTH = 500;
-    const expired_on = "<small className='text-danger'><strong>Expired on:</strong> {moment(addDays(course.created_at, course.course_expiration_day)).fromNow()}</small>";
+class Courses extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            courses: this.props.cources,
+            MAX_LENGTH : 500,
+            expired_on: "<small className='text-danger'><strong>Expired on:</strong> {moment(addDays(course.created_at, course.course_expiration_day)).fromNow()}</small>",
+        };
+        this.addDays = this.addDays.bind(this);
+        this.priceshow = this.priceshow.bind(this);
+    }
 
-    function addDays(date, days) {
+    componentDidMount(){}
+
+    recommended(nextProps){}
+
+    addDays(date, days) {
         var result = new Date(date);
         result.setDate(result.getDate() + days);
         return result;
     }
 
-    const wordsTruncate = (words, length) => {
+    wordsTruncate(words, length){
         words = words.trim(); //you need to decied wheather you do this or not
         length -= 6; // because ' (...)'.length === 6
         if (length >= words.length) return words;
@@ -36,7 +47,7 @@ export default function Courses(props){
         return '...';
     }
 
-    const priceshow = (course_price,course_sale_price) => {
+    priceshow(course_price,course_sale_price){
         let price;
         if(course_price != null &&  course_sale_price != null ){
             price = "<span><del>$"+course_price+"</del> $"+course_sale_price+"</span>";
@@ -50,15 +61,15 @@ export default function Courses(props){
         }
         return price;
     }
-    
-    return ( 
-        <>
-            <Authenticated auth={props.auth} errors={props.errors} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Courses</h2>} >
+
+    render(){
+        return(
+            <Authenticated auth={this.props.auth} errors={this.props.errors} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Courses</h2>} >
                 <Head title="Courses" />
                 <div className="py-12">
                     <Container>
                         <Row className="justify-content-md-center">
-                        {courses.map((course,index)=>(
+                        {this.state.courses.map((course,index)=>(
                             <div className="py-3 col-sm-4" key={course.id}>
                                 <CardGroup>
                                     <Card style={{ width: '25rem',height: '25rem'  }}>
@@ -70,7 +81,7 @@ export default function Courses(props){
                                         </div>
                                         <Card.Body>
                                             <Card.Title>{course.course_name}</Card.Title>
-                                            {(course.course_content) && (<Card.Text dangerouslySetInnerHTML={{ __html: wordsTruncate(course.course_content, 200) }}>
+                                            {(course.course_content) && (<Card.Text dangerouslySetInnerHTML={{ __html: this.wordsTruncate(course.course_content, 200) }}>
                                                 </Card.Text> ) 
                                             }
                                         </Card.Body>
@@ -81,10 +92,10 @@ export default function Courses(props){
                                                         <strong>Created at:</strong> {moment(course.created_at).fromNow()}
                                                     </small>
                                                     { course.expiration != 0 || course.course_expiration_day != null ? 
-                                                    <small className='text-danger'><strong>Expired on:</strong> {moment(addDays(course.created_at, course.course_expiration_day)).fromNow()}</small> : ""}
+                                                    <small className='text-danger'><strong>Expired on:</strong> {moment(this.addDays(course.created_at, course.course_expiration_day)).fromNow()}</small> : ""}
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <div dangerouslySetInnerHTML={{ __html: priceshow(course.course_price, course.course_sale_price) }}></div>
+                                                    <div dangerouslySetInnerHTML={{ __html: this.priceshow(course.course_price, course.course_sale_price) }}></div>
                                                 </div>
                                             </div>
                                             <div className="row mt-3">
@@ -103,7 +114,7 @@ export default function Courses(props){
                     </Container>
                 </div>
             </Authenticated>
-        </>
-    );
-
+        );
+    }
 }
+export default Courses;

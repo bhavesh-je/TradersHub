@@ -3,7 +3,6 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title inertia>{{ config('app.name', 'Traders Hub') }}</title>
         <link rel="icon" type="image/png" href="{{ asset('logo/cropped-fav-512x450.png') }}"> 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -26,7 +25,6 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        {{-- <script src="https://sdk.scdn.co/spotify-player.js"></script> --}}
         @inertia
 
         @env ('local')
@@ -46,5 +44,6 @@
         <!-- AdminLTE for demo purposes -->
         <script src="{{ asset('admin-lte/dist/js/demo.js')}}"></script>
         <script src="{{ asset('js/quize.js')}}"></script>
+        {{-- <script src="https://sdk.scdn.co/spotify-player.js"></script> --}}
     </body>
 </html>

@@ -37,11 +37,13 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="que_id">Question</label>
-                            <select class="form-control questions @error('que_id') is-invalid @enderror" name="que_id">
+                            {{-- <select class="form-control questions @error('que_id') is-invalid @enderror" name="que_id">
                                 @if ( $question )
                                     <option value="{{ $question->id }}"> {{ $question->question }} </option>
                                 @endif
-                            </select>
+                            </select> --}}
+                            <input type="hidden" name="que_id" value="{{ $question->id }}">
+                            <input type="text" id="question_name" class="form-control @error('que_id') is-invalid @enderror" name="question_name" value="{{ $question->question }}" readonly>
                             @error('que_id')
                                 <span id="que_id-error" class="error invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -64,10 +66,13 @@
                                                 <div class="input-group _single_ans">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
-                                                            <input type="radio" class="single_choice_0" name="single_choice_0" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
+                                                            <input type="radio" class="single_choice_0 @error('single_choice_ans[]') is-invalid @enderror" name="single_choice_0" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
                                                         </span>
                                                     </div>
-                                                    <input type="text" id="single_choice_ans" class="form-control @error('single_choice_ans') is-invalid @enderror" name="single_choice_ans[]">
+                                                    <input type="text" id="single_choice_ans" class="form-control @error('single_choice_ans[]') is-invalid @enderror" name="single_choice_ans[]">
+                                                    @error('single_choice_ans[]')
+                                                        <span id="single_choice_ans-error" class="error invalid-feedback">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         @else    
@@ -98,10 +103,13 @@
                                                 <div class="input-group _single_ans">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
-                                                            <input type="checkbox" class="" name="multi_choice_0[]" onclick="selectOption({{$i}})" value="{{ $$opt_count->id + $i }}" data-id="0">
+                                                            <input type="checkbox" class="" name="multi_choice_0[]" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
                                                         </span>
                                                     </div>
-                                                    <input type="text" id="single_choice_ans" class="form-control @error('single_choice_ans') is-invalid @enderror" name="single_choice_ans[]">
+                                                    <input type="text" id="single_choice_ans" class="form-control @error('single_choice_ans[]') is-invalid @enderror" name="single_choice_ans[]">
+                                                    @error('single_choice_ans[]')
+                                                        <span id="single_choice[]_ans-error" class="error invalid-feedback">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         @else

@@ -53,7 +53,7 @@ class TopicController extends Controller
     public function store(Request $request)
     {
         //
-        $validate = $this->validate($request,[
+        $validate = $this->validate($request, [
             'topic_name' => 'required|max:250',
             'duration' => 'nullable|numeric|min:1|max:60',
             'passing_grade' => 'nullable|numeric|min:1|max:100',
@@ -83,7 +83,7 @@ class TopicController extends Controller
     public function show($id)
     {
         //
-       
+
     }
 
     /**
@@ -109,7 +109,7 @@ class TopicController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $validate = $this->validate($request,[
+        $validate = $this->validate($request, [
             'topic_name' => 'required|max:250',
             'duration' => 'nullable|numeric|min:1|max:60',
             'passing_grade' => 'nullable|numeric|min:1|max:100',

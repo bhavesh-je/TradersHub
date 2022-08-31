@@ -50,17 +50,16 @@ export default function Authenticated({ auth, header, children }) {
                                     Signal Reports
                                 </NavLink>
 
-                                <NavLink href={route('faqs')} active={route().current('faqs')}>
-                                    FAQs
-                                </NavLink>
-
                                 <NavLink href={route('podcast')} active={route().current('podcast')}>
                                     Podcast
+                                </NavLink>
+
+                                <NavLink href={route('faqs')} active={route().current('faqs')}>
+                                    FAQs
                                 </NavLink>
                                     
                             </div>
                         </div>
-                            
 
                         <div className="hidden sm:flex sm:items-center sm:ml-6">
                             <div className="ml-3 relative">

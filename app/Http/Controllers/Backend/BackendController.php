@@ -40,6 +40,11 @@ class BackendController extends Controller
         }
     }
 
+    public function adminLoginForm()
+    {
+        return view('Backend.login.login_form');
+    }
+
     public function postLogin(Request $request)
     {
         $request->validate([

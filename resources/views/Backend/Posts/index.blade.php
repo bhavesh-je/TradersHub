@@ -50,10 +50,10 @@
                                     <span class="badge rounded-pill bg-secondary">Unpublished</span>
                                 @endif
                             </td>
-                            <td class="text-center d-flex justify-content-around">
+                            <td class="text-center">
                                 {{-- <a href="{{ route('posts.show',$post->id) }}" class="btn btn-outline-primary btn-sm">Show</a> --}}
-                                <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-outline-info btn-sm">Edit</a>
                                 <form method="post" action="{{ route('posts.destroy',$post->id) }}">
+                                    <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-outline-info btn-sm">Edit</a>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger show-alert-delete-box btn-sm" data-toggle="tooltip" title='Delete'>Delete</button>
@@ -78,6 +78,27 @@
 <script src="{{ asset('admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
+<script type="text/javascript">
+    $('.show-alert-delete-box').on('click',function(event){
+        var form =  $(this).closest("form");
+        var name = $(this).data("name");
+        event.preventDefault();
+        swal({
+            title: "Are you sure you want to delete this record?",
+            text: "If you delete this, it will be gone forever.",
+            icon: "warning",
+            type: "warning",
+            buttons: ["Cancel","Yes!"],
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((willDelete) => {
+            if (willDelete) {
+                form.submit();
+            }
+        });
+    });
+</script>
 <script>
     $(function () {
         $('#post-table').DataTable({

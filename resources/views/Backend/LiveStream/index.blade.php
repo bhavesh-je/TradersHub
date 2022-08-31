@@ -69,11 +69,11 @@
                                 <input type="hidden" name="mydatetime" value="{{ $list->start_time }}" class="mydatetime" > --}}
                             </td>
                             <td class="text-center" >{{$list->duration}}m</td>
-                            <td class="text-center d-flex justify-content-around">
-                                <a href="{{ route('meetings.show',$list->id) }}" class="btn btn-outline-primary btn-sm">Show</a>
-                                <a href="{{ route('meetings.edit',$list->id) }}" class="btn btn-outline-info btn-sm">Edit</a>
+                            <td class="text-center">
                                 {{-- <a href="{{ route('meetings.destroy',$list->id) }}" class="btn btn-danger btn-sm">Delete</a> --}}
                                 <form method="post" action="{{ route('meetings.destroy',$list->id) }}">
+                                    <a href="{{ route('meetings.show',$list->id) }}" class="btn btn-outline-primary btn-sm">Show</a>
+                                    <a href="{{ route('meetings.edit',$list->id) }}" class="btn btn-outline-info btn-sm">Edit</a>
                                     @csrf
                                     @method('DELETE')
                                     <a type="submit" class="btn btn-outline-danger show-alert-delete-box btn-sm" data-toggle="tooltip" title='Delete'>Delete</a>
@@ -97,19 +97,6 @@
 <script src="{{ asset('admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
-<script>
-    $(function () {
-        $('#metting-table').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-</script>
 <script type="text/javascript">
     $('.show-alert-delete-box').on('click',function(event){
         var form =  $(this).closest("form");
@@ -131,6 +118,20 @@
         });
     });
 </script>
+<script>
+    $(function () {
+        $('#metting-table').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
+
 <script>
 const copyMailId = document.querySelectorAll('.join_url');
 

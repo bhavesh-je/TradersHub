@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function () {
                 ->name('logout');
 });
 
+// Custom design
+Route::get('admin-login-form', [App\Http\Controllers\Backend\BackendController::class, 'adminLoginForm'])->name('admin_login_nw');
+
 // Route to login for laravel admin panel
 Route::get('admin', [App\Http\Controllers\Backend\BackendController::class, 'index'])->name('admin_login');
 Route::post('post-login', [App\Http\Controllers\Backend\BackendController::class, 'postLogin'])->name('login.post');

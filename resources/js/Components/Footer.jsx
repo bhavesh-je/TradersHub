@@ -47,7 +47,7 @@ export default function Footer(props){
 
                                 {/* Copyright Text */}
                                 <div className="copywrite-text mt-5">
-                                    Copyright @ <Link href='#' className='text-info'>Traders Hub</Link>
+                                    Copyright @ <Link href='/' className='text-info'>Traders Hub</Link>
                                 </div>
 
                                 {/* Social area */}
@@ -68,9 +68,7 @@ export default function Footer(props){
                                 <div className="footer_menu">
                                     <ul>
                                         <li><Link href="#">About Us</Link></li>
-                                        <li><Link href="#">Corporate Sale</Link></li>
                                         <li><Link href="#">Terms &amp; Policy</Link></li>
-                                        <li><Link href="#">Community</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -80,7 +78,6 @@ export default function Footer(props){
                             <div className='single-footer-widget section_padding_0_130'>
                                 {/* Widget Title */}
                                 <h6 className="text-uppercase fw-bold">
-                                    Podcast
                                 </h6>
 
                                  <div className="footer_menu">

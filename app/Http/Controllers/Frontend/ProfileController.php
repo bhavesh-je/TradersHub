@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -85,7 +86,7 @@ class ProfileController extends Controller
         if( $request->file('profile_img') != null ){
             $file = $request->file('profile_img');
             $filename = str_replace(" ","_",$request->name).'_'.time().'.'.$file->extension();
-            // $file->move(public_path('uploads/users-profile'), $filename);
+            $file->move(public_path('uploads/users-profile'), $filename);
             $updatePR['profile_img'] = $filename;
         }
         // dd($updatePR);
@@ -96,10 +97,21 @@ class ProfileController extends Controller
 
     public function changePassword(Request $request)
     {
-        $checkemail = User::where('email',$request->currentpassword)->firstOrFail();
-
-        
-        dd($request);
+        // $pass = Hash::make()
+        $checkemail = User::where(['id'=>$request->id])->firstOrFail();
+        $checkPass = Hash::check($request->currentpassword, $checkemail->password);
+        $newpassword = Hash::make($request->newpassword);
+        // dd($newpassword);
+        if($checkPass){    
+            if($request->newpassword === $request->confirmed){
+                // User::where('id',$request->id)->update(['password'=>$newpassword]);
+                return response()->json(['succes'=>array("Your password has been updated successfully!")]);
+            }else{
+                return response()->json(['errors'=>array("Your new password or confirmed password is not matched!")]);
+            }
+        }else{
+            return response()->json(['errors'=>"Your current password is wrong!"]);
+        }
     }
 
     /**

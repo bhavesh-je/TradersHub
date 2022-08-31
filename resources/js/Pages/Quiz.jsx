@@ -1,30 +1,29 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Container, Row, Col, Button, Card, CardGroup } from 'react-bootstrap';
 import { Link, Head } from '@inertiajs/inertia-react';
 
-export default function Quiz(props){
-    const quizes = props.quizes;
-
-    // Show quiz time
-    const quizTime = (duration_measure) => {
-        let measure;
-        switch(duration_measure){
-            case 'minutes' : return 'min';   
-            case 'hours' : return 'hrs';
-            case 'days' : return 'days';
-        }
-        
+class Quiz extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            quizes: this.props.quizes,
+        };
     }
 
-    return ( 
-        <>
-            <Authenticated auth={props.auth} errors={props.errors} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Quize</h2>} >
+    componentDidMount(){}
+
+    recommended(nextProps){}
+
+    render(){
+        return(
+            <>
+            <Authenticated auth={this.props.auth} errors={this.props.errors} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Quize</h2>} >
                 <Head title="Quize" />
                 <div className="py-12">
                     <Container>
                         <Row className="justify-content-md-center" xs={2} md={3}>
-                            {quizes.map((quize, index) => (
+                            {this.state.quizes.map((quize, index) => (
                                 <Col key={quize.id}>
                                     <Card>
                                         <Card.Body>
@@ -56,6 +55,7 @@ export default function Quiz(props){
                 </div>
             </Authenticated> 
         </>
-    );
-
+        );
+    }
 }
+export default Quiz;
