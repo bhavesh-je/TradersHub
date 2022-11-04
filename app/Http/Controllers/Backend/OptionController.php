@@ -51,7 +51,7 @@ class OptionController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $validate = $this->val idate($request,[
+        $validate = $this->validate($request,[
             'que_id' => 'required',
         ]);
         
