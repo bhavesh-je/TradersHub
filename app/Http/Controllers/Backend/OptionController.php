@@ -51,21 +51,17 @@ class OptionController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        // $validate = $this->validate($request,[
-        //     'que_id' => 'required',
-        //     'single_choice_ans.*' => 'required|array',
-        // ],
-        // [
-        //     'single_choice_ans.require' => 'Options can not be null.'
-        // ]);
+        $validate = $this->val                                                                                                                      idate($request,[
+            'que_id' => 'required',
+        ]);
         
         // $arrayValidator = Validator::make($request->all(), []);
         // $arrayValidator->each('single_choice_ans', ['required|min:1|max:60']);
         
         // Insert options
 
-        // $data = [];
-        // $topic_id = Question::with('topics')->findOrFail($request->que_id);
+        $data = [];
+        $topic_id = Question::with('topics')->findOrFail($request->que_id);
 
         // $validate = $this->validate($request,[
         //     'que_id' => ['required', Rule::unique('options')->where(function ($query) use($topic_id, $request) {
@@ -73,56 +69,55 @@ class OptionController extends Controller
         //     }),],
         // ]);
 
-        // // dd($request->all());
-        // $opt_imgs = array();
-        // if( $request->is_opt_img == 1 ){
-        //     foreach( $request->file('single_choice_ans_img') as $key => $optImg){
-        //         if( $optImg ){
-        //             $file = $optImg->getClientOriginalName();
-        //             // $filename = 'opt_'.time().'.'.$optImg->extension();
-        //             $optImg->move(public_path('uploads/opt-img'), $file);
-        //             $opt_imgs[] = $file;
-        //             $opt_data = [
-        //                 'opt_img' => $file,
-        //                 'que_id' => $request->que_id,
-        //                 'topic_id' => $topic_id->topics->id,
-        //             ];
-        //             $option = Option::create($opt_data);
-        //         }
-        //     }
-        // } else {
-
-        //     foreach( $request->single_choice_ans as $opts ) {
-        //         $opt_data = [
-        //             'option' => $opts,
-        //             'que_id' => $request->que_id,
-        //             'topic_id' => $topic_id->topics->id,
-        //         ];
-        //        $option = Option::create($opt_data);
-        //     }
-        // }
-        // // session(['option_id' => $option->id]);
+        // dd($request->all());
+        $opt_imgs = array();
+        if( $request->is_opt_img == 1 ){
+            foreach( $request->file('single_choice_ans_img') as $key => $optImg){
+                if( $optImg ){
+                    $file = $optImg->getClientOriginalName();
+                    // $filename = 'opt_'.time().'.'.$optImg->extension();
+                    $optImg->move(public_path('uploads/opt-img'), $file);
+                    $opt_imgs[] = $file;
+                    $opt_data = [
+                        'opt_img' => $file,
+                        'que_id' => $request->que_id,
+                        'topic_id' => $topic_id->topics->id,
+                    ];
+                    $option = Option::create($opt_data);
+                }
+            }
+        } else {
+            foreach( $request->single_choice_ans as $opts ) {
+                $opt_data = [
+                    'option' => $opts,
+                    'que_id' => $request->que_id,
+                    'topic_id' => $topic_id->topics->id,
+                ];
+               $option = Option::create($opt_data);
+            }
+        }
+        // session(['option_id' => $option->id]);
         
 
-        // // Store options correct ans
-        // if( $request->multi_choice_0 ) // store multi select ans
-        // {
-        //     foreach( $request->multi_choice_0 as $key => $multi_choice_ans){
-        //         $ans_data = [
-        //             'opt_id' => $multi_choice_ans, 
-        //             'que_id' => $request->que_id, 
-        //             'topic_id' => $topic_id->topics->id, 
-        //         ];
-        //         Answer::create($ans_data);
-        //     }
-        // } else { // Store single select ans
-        //     $ans_data = [
-        //         'opt_id' => $request->single_choice_0, 
-        //         'que_id' => $request->que_id, 
-        //         'topic_id' => $topic_id->topics->id, 
-        //     ];
-        //     Answer::create($ans_data);
-        // }
+        // Store options correct ans
+        if( $request->multi_choice_0 ) // store multi select ans
+        {
+            foreach( $request->multi_choice_0 as $key => $multi_choice_ans){
+                $ans_data = [
+                    'opt_id' => $multi_choice_ans, 
+                    'que_id' => $request->que_id, 
+                    'topic_id' => $topic_id->topics->id, 
+                ];
+                Answer::create($ans_data);
+            }
+        } else { // Store single select ans
+            $ans_data = [
+                'opt_id' => $request->single_choice_0, 
+                'que_id' => $request->que_id, 
+                'topic_id' => $topic_id->topics->id, 
+            ];
+            Answer::create($ans_data);
+        }
 
         return redirect()->route('questions.index')->with('success','Options created sucessfully!');
     }
@@ -176,12 +171,8 @@ class OptionController extends Controller
     {
         $topic_id = Question::with('topics')->findOrFail($id);
         
-        //Remove
-        // Option::whereIn('id', $request->opt_ids)->where('que_id', $id)->where('topic_id', $topic_id->topics->id)->delete();
-        // Answer::where('que_id', $id)->where('topic_id', $topic_id->topics->id)->delete();
-
+        // dd($request->all());
         $opt_imgs = array();
-        // dd($request->hasFile('single_choice_ans_img'));
         if( $request->is_opt_img == 1 ){
             if($request->hasFile('single_choice_ans_img')){
                 foreach( $request->file('single_choice_ans_img') as $key => $optImg){
