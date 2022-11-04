@@ -62,3 +62,22 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Credentials
+
+url: 192.168.1.157:8000/admin
+admin:
+u : super_admin@gmail.com
+p: Admin!@#123
+
+url: 192.168.1.157:8000
+>   Users :
+>        u: signal.user@mail.com
+>        p: signal@123
+
+>        u: master_user@mail.com
+>        p: master@123
+
+>       u: standard_user@mail.com
+>        p: standard@123
+# TradersHub
