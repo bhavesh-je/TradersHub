@@ -1,8 +1,7 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active">Quiz</li>
-    <li class="breadcrumb-item active">Options</li>
+    <li>Quiz</li>
+    <li>Options</li>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">

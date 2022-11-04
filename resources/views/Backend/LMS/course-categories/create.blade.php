@@ -1,57 +1,62 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active">LMS</li>
-    <li class="breadcrumb-item active">Course Category</li>
-    <li class="breadcrumb-item active">Create Course Category</li>
+    <li><a href="{{ route('course-category.index') }}">LMS</a></li>
+    <li><a href="{{ route('course-category.index') }}">Course Categories</a></li>
+    <li>Create Course Category</li>
 @endsection
 @section('content')
-<div class="col-xs-6 col-sm-6 col-md-6">
+<div class="col-xs-12 col-sm-12 col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Create Course Categroy</h3>
+            <h3 class="card-title">Create Permission</h3>
         </div>
         <div class="card-body">
             <form method="POST" action="{{ route('course-category.store') }}">
-            @csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="c_c_name">Course category name</label>
-                            <input type="text" class="form-control @error('c_c_name') is-invalid @enderror" id="c_c_name" name="c_c_name" placeholder="Enter name" >
-                            @error('c_c_name')
-                                <span id="c_c_name-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
-
+                @csrf
+                <div class="col-md-12 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="c_c_name" class="form-label"><strong>Course category name</strong></label>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Write content ..."></textarea>
+                    <input type="text" class="form-control custom-control @error('c_c_name') danger-box @enderror" id="c_c_name" name="c_c_name" placeholder="Enter category name" value="{{ old('c_c_name') }}" oninput="this.value = this.value.toLowerCase()">
+                    @error('c_c_name')
+                        <span class="error-text" role="alert">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="description" class="form-label"><strong>Description</strong></label>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="parent">Parent</label>
-                            <select class="custom-select rounded-0" id="parent" name="parent">
+                    <textarea id="description" name="description" class="form-control custom-control" rows="3" placeholder="Write description...">{{ old('description') }}</textarea>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="description" class="form-label"><strong>Parent category</strong></label>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-4">
+                        <div class="col-sm-12">
+                            <select class="form-select custome-select" aria-label="Default select example" id="parent" name="parent">
                                 <option value="">Select parent category</option>
                                 @foreach($C_cats as $key => $C_cat)
-                                <option value="{{ $C_cat->id }}">{{ $C_cat->c_c_name }}</option>
+                                    <option value="{{ $C_cat->id }}">{{ $C_cat->c_c_name }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary custom-btn">Create</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 @endsection
-
 @section('js')
 <script src="{{ asset('tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 <script>

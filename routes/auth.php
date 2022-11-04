@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Backend\AjaxControler;
+use App\Http\Controllers\Backend\AjaxController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -78,6 +79,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->group(function () {
     Route::resource('permissions', App\Http\Controllers\Backend\PermissionController::class);
 
     Route::resource('users', App\Http\Controllers\Backend\UserController::class);
+    Route::post('remove-profile-img',[App\Http\Controllers\Backend\AjaxController::class,'uploadProfileImg'])->name('uploadProfileImg');
 
     Route::resource('meetings', App\Http\Controllers\Backend\LiveStreamController::class);
 
@@ -88,12 +90,13 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->group(function () {
     Route::resource('topics', App\Http\Controllers\Backend\TopicController::class);
 
     Route::resource('posts',App\Http\Controllers\Backend\PostController::class);
-    Route::post('posts/update',[App\Http\Controllers\Backend\PostController::class,'update'])->name('postsUpdate');
+    // Route::post('posts/update',[App\Http\Controllers\Backend\PostController::class,'update'])->name('postsUpdate');
 
     Route::resource('questions', App\Http\Controllers\Backend\QuestionControler::class);
     Route::post('remove-que-img', [App\Http\Controllers\Backend\AjaxController::class, 'uploadQuestionImg'])->name('uploadOptImg');
 
     Route::post('get-topics', [App\Http\Controllers\Backend\QuestionControler::class, 'getTopics'])->name('getTopics');
+    Route::post('get-courses', [App\Http\Controllers\Backend\TopicController::class, 'getCourses'])->name('getCourses');
 
     Route::resource('option', App\Http\Controllers\Backend\OptionController::class);
     Route::post('remove-opt-img', [App\Http\Controllers\Backend\AjaxController::class, 'uploadOptionImg'])->name('RemoveOptImg');
@@ -104,5 +107,6 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->group(function () {
 
     Route::resource('video-post', App\Http\Controllers\Backend\VideoPostsController::class);
 
-
+    Route::resource('profile', App\Http\Controllers\Backend\ProfileController::class);
+    Route::post('profile/update',[App\Http\Controllers\Backend\ProfileController::class,'update'])->name('profileUpdate');
 });

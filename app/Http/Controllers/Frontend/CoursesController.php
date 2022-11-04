@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Auth;
 
 class CoursesController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -68,7 +73,7 @@ class CoursesController extends Controller
     public function show($id)
     {
         //
-        $view_courses = Cources::where('id', $id)->firstOrFail();
+        $view_courses = Cources::with('CourseTopics')->where('id', $id)->firstOrFail();
         $cat_id = json_decode($view_courses->cat_id);
         $categories = CourseCategories::whereIn('id', $cat_id)
         ->orderBy('created_at', 'DESC')->get();

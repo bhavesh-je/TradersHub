@@ -1,8 +1,7 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('permissions.index') }}">Role Management</a></li>
-    <li class="breadcrumb-item active">Create Permission</li>
+    <li><a href="{{ route('permissions.index') }}">Role Management</a></li>
+    <li>Create Permission</li>
 @endsection
 
 @section('content')
@@ -12,26 +11,25 @@
             <h3 class="card-title">Create Permission</h3>
         </div>
         <div class="card-body">
-            <form method="POST" action="{{ route('permissions.store') }}">
-                @csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="name">Permission Name</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Enter permission name" value="{{ old('name') }}" oninput="this.value = this.value.toLowerCase()">
-                            @error('name')
-                                <span id="name-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
+            <form method="POST" action="{{ route('permissions.store') }}" enctype="multipart/form-data">
+            @csrf
+                <div class="col-md-12 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="name" class="form-label"><strong>Permission name</strong></label>
                         </div>
                     </div>
+
+                    <input type="text" class="form-control custom-control @error('name') danger-box @enderror" id="name" name="name" placeholder="Enter permission name" value="{{ old('name') }}" oninput="this.value = this.value.toLowerCase()">
+                    @error('name')
+                        <span class="error-text" role="alert">{{ $message }}</span>
+                    @enderror
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary custom-btn">Create</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-
 @endsection

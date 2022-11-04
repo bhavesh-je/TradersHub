@@ -1,103 +1,95 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active">Meetings List</li>
+    <li>Meetings</li>
+@endsection
+
+@section('create-button')
+<a href="{{ Route('meetings.create') }}" class="btn btn-success btn-sm me-0 mb-2">Create Meeting</a>
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-{{-- <style>
-    .btn-sm{
-        padding: 0.25rem 1.5rem !important;
-    }
-</style> --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 @endsection
 
 @section('content')
-<div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Meetings List</h3>
-            <div class="card-tools">
-                <a href="{{ Route('meetings.create') }}" class="btn btn-success pul-right">Create Meeting</a>
-            </div>
+<div class="table-responsive">
+    @if(session('success'))
+        <div class="custom-alert">
+          <div class="alert alert-success alert-dismissible " role="alert">
+            <strong><i class="fas fa-check me-2"></i>Success!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="fas fa-times success me-2"></i></button>
+          </div>
         </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-            {{-- <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="button" id="zoom_meeting_link" class="btn btn-outline-info btn-md"><i class="nav-icon fas fa-video"></i> Click to Get Zoom Link</button>
-            </div> --}}
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <i class="icon fas fa-check"></i> {{ session('success') }}
-                </div>
-            @endif
-            <table id="metting-table" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Topic</th>
-                        <th width="200">Join Url</th>
-                        <th>Start Time</th>
-                        <th>Duration</th>
-                        <th width="200" class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $a = 1; ?>
-                    @foreach ($listmeeings as $list)
-                    {{-- @php echo '<pre>'; print_r( $list ); echo '</pre>'; @endphp --}}
-                        <tr>
-                            <td>{{$a}}</td>
-                            <td>{{$list->topic}}</td>
-                            <td class="join_url" >{{$list->join_url}}</td>
-                            <td class="text-center">
-                                @php
-                                    $dt = new DateTime($list->start_time);
-                                    $tz = new DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+    @endif
+    <table id="meetings-table" class="table d-table" style="width: 100%;">
+        <thead>
+            <tr>
+                <th width="20">#</th>
+                <th>Topic</th>
+                {{-- <th width="150">Join Url</th> --}}
+                <th>Start Time</th>
+                <th width="50">Duration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @php $i = 1 @endphp
+        @foreach ($listmeeings as $list)
+            <tr>
+                <td class="table-id">{{ $i }}</td>
+                <td>{{$list->topic}}</td>
+                {{-- <td class="join_url" >{{$list->join_url}}</td> --}}
+                <td>
+                    @php
+                        $dt = new DateTime($list->start_time);
+                        $tz = new DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
 
-                                    $dt->setTimezone($tz);
-                                    echo $dt->format('Y-m-d H:i');
-                                @endphp
-                                {{-- {{$list->start_time}} --}}
-                                {{-- {!! date('Y-m-d H:i', strtotime($list->start_time)) !!} --}}
-                                {{-- <span id="date"></span><br/>
-                                <span id="time"></span>
-                                <input type="hidden" name="mydatetime" value="{{ $list->start_time }}" class="mydatetime" > --}}
-                            </td>
-                            <td class="text-center" >{{$list->duration}}m</td>
-                            <td class="text-center">
-                                {{-- <a href="{{ route('meetings.destroy',$list->id) }}" class="btn btn-danger btn-sm">Delete</a> --}}
-                                <form method="post" action="{{ route('meetings.destroy',$list->id) }}">
-                                    <a href="{{ route('meetings.show',$list->id) }}" class="btn btn-outline-primary btn-sm">Show</a>
-                                    <a href="{{ route('meetings.edit',$list->id) }}" class="btn btn-outline-info btn-sm">Edit</a>
-                                    @csrf
-                                    @method('DELETE')
-                                    <a type="submit" class="btn btn-outline-danger show-alert-delete-box btn-sm" data-toggle="tooltip" title='Delete'>Delete</a>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php $a +=1; ?>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        $dt->setTimezone($tz);
+                        echo $dt->format('Y-m-d H:i');
+                    @endphp
+                </td>
+                <td class="text-center" >{{$list->duration}}m</td>
+                <td class="text-center">
+                    {{-- <a href="{{ route('meetings.destroy',$list->id) }}" class="btn btn-danger btn-sm">Delete</a> --}}
+                    <form method="post" action="{{ route('meetings.destroy',$list->id) }}">
+                        <button type="button" class="btn btn-primary custom-btn join-url-popup btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Join Url" data-html="true" data-content='<ul class="nav"><li><a href="#">hola</li><li><a href="#">hola2</li></ul>'><i class="fas fa-clipboard"></i></button>    
+                        <a href="{{ route('meetings.show',$list->id) }}" class="btn btn-dark custom-btn btn-sm"><i class="fas fa-eye"></i></a>
+                        <a href="{{ route('meetings.edit',$list->id) }}" class="btn btn-primary custom-btn btn-sm"><i class="fas fa-edit"></i></a>
+                        @csrf
+                        @method('DELETE')
+                        <a type="submit" class="btn btn-danger custom-btn show-alert-delete-box btn-sm" data-toggle="tooltip" title='Delete'><i class="fas fa-trash"></i></a>
+                    </form>
+                </td>
+            </tr>
+        @php $i++ @endphp
+        @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection
 
 @section('js')
-<script src="{{ asset('admin-lte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
-<script type="text/javascript">
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+  <script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
+  <script>
+    
+    
+    $('#meetings-table').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+        "paginate": {
+            "previous": '<i class="fas fa-chevron-left"></i>',
+            "next": '<i class="fas fa-chevron-right"></i>'
+        }
+        }
+    });
     $('.show-alert-delete-box').on('click',function(event){
         var form =  $(this).closest("form");
         var name = $(this).data("name");
@@ -117,88 +109,18 @@
             }
         });
     });
-</script>
-<script>
-    $(function () {
-        $('#metting-table').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
+
+    
+    setTimeout((function() {
+
+        $(document).on("click", ".popover .close" , function(){
+            $(this).parents(".popover").popover('hide');
         });
-    });
+
+        $('.join-url-popup').popover({
+            placement : 'top',
+        });
+    }), 200);
+    
 </script>
-
-<script>
-const copyMailId = document.querySelectorAll('.join_url');
-
-copyMailId.forEach(copyText => {
-    copyText.addEventListener('click', () => {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(copyText);
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        try {
-            document.execCommand('copy');
-            selection.removeAllRanges();
-
-            const mailId = copyText.textContent;
-            copyText.textContent = 'Copied!';
-            copyText.classList.add('success');
-
-            setTimeout(() => {
-                copyText.textContent = mailId;
-                copyText.classList.remove('success');
-            }, 1000);
-        } catch (e) {
-            copyText.textContent = 'Couldn\'t copy, hit Ctrl+C!';
-            copyText.classList.add('error');
-
-            setTimeout(() => {
-                errorMsg.classList.remove('show');
-            }, 1200);
-        }
-    });
-});
-</script>
-<script type="text/javascript">
-$(document).ready(function(){
-    var calc = document.getElementById("calc");
-    var onDateSubmit = function (){
-        var date = document.getElementById("date").value;
-        var time = document.getElementById("time").value;
-        console.log("Time is"+time+"an Date is"+date);
-        var convertedDateTime = new Date(date + " " + time);
-        // var convertedDateTime = new Date(date + " " + time).toISOString();
-        var formattedTime = ISODateString(convertedDateTime);
-        $('#start_time').val(formattedTime);
-    };
-    function ISODateString(d) {
-        function pad(n) {return n<10 ? '0'+n : n}
-        return d.getUTCFullYear()+'-'
-             + pad(d.getUTCMonth()+1)+'-'
-             + pad(d.getUTCDate())+'T'
-             + pad(d.getUTCHours())+':'
-             + pad(d.getUTCMinutes())+':'
-             + pad(d.getUTCSeconds())+'Z'
-    }
-    var datetime = $('.mydatetime').val();
-    // console.log(datetime);
-    var mydate = new Date(datetime);
-    // var dateString = mydate.toISOString().substring(0, 10);
-    // var timeString = mydate.toISOString().substring(11, 16);
-    var dateString = mydate.toLocaleString().substring(0, 10);
-    var timeString = mydate.toLocaleString().substring(12, 17);
-    // var timeString = date.setHours(0,0);
-    // $('#date').val(dateString);
-    // $('#time').val(timeString);
-    $('#date').text(dateString);
-    $('#time').text(timeString);
-});
-</script> 
 @endsection

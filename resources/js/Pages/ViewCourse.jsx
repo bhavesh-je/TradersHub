@@ -10,12 +10,60 @@ class Courses extends Component{
         super(props);
         this.state = {
             course_categories: this.props.course_cat,
+            course_topics : this.props.view_cources.course_topics,
         };
         this.addDays = this.addDays.bind(this);
         this.priceshow = this.priceshow.bind(this);
     }
 
-    componentDidMount(){}
+    componentDidMount(){
+        $("body").addClass("viewCoursePage");
+        $('.viewCoursePage').on('keydown', function(event) {
+            console.log("viewCourse page");
+            console.log(event.keyCode);
+            console.log(event);
+            
+            if(event.keyCode == 123 ) {
+                return false;
+            } 
+
+            if( event.keyCode == 116 || event.keyCode == 93) {
+                event.preventDefault();
+                return false;
+            } 
+
+            if( event.ctrlKey || event.shiftKey || event.keyCode == 73 ) {
+                event.preventDefault();
+                return false;
+            }
+            
+        });
+
+        // Restrict left/right click
+        $('.viewCoursePage').on("mousedown",function(e){
+            console.log(e.which);
+            e.preventDefault();
+            if( (e.which == 1) || (e.which === 3) ) {
+                return false;
+            }
+        });
+
+        // Restrict left/right click
+        $('.viewCoursePage').bind("contextmenu",function(e){
+            console.log(e.which);
+            // e.preventDefault();
+            return false;
+        });
+    }
+
+    componentWillUnmount(){
+        
+        $("body").removeClass("viewCoursePage");
+        $('body').unbind('keydown');
+        $('body').unbind('mousedown');
+        $('body').unbind('contextmenu');
+        // console.log($(location).attr('pathname'));
+    }
 
     recommended(nextProps){}
     
@@ -42,6 +90,7 @@ class Courses extends Component{
     
     render(){
         return(
+            <>
             <Authenticated
             auth={this.props.auth}
             errors={this.props.errors}
@@ -85,13 +134,58 @@ class Courses extends Component{
                                             <Card.Text>{this.state.course_categories}</Card.Text>
                                         </Col>
                                     </Row>
+                                    
                                 </Card.Body>
                             </Card>
+                            
                         </Col>
                     </Row>
+                    { this.state.course_topics.length != 0 ? 
+                    <div className="quizBtn my-5">
+                        <h3>Course Quiz</h3>
+                        <div className="container">
+                            <div className="row">
+                                {console.log(this.state.course_topics)}
+                                {this.state.course_topics.map((topic, index) => (
+                                    <div className="col-lg-4 my-3" key={topic.id}>
+                                        <div className="card card-margin h-100">
+                                            <div className="card-header no-border">
+                                                <h5 className="card-title text-uppercase">{topic.topic_name}</h5>
+                                            </div>
+                                            <div className="card-body pt-0">
+                                                <div className="widget-49">
+                                                    <div className="widget-49-title-wrapper">
+                                                        <div className="widget-49-date-success">
+                                                            <span className="widget-49-date-day ">{ topic.passing_grade != null || topic.passing_grade > 0 ? topic.passing_grade : "No"}</span>
+                                                            <span className="widget-49-date-month text-uppercase">mark</span>
+                                                        </div>
+                                                        <div className="widget-49-meeting-info">
+                                                            <span className="widget-49-pro-title">Time: { topic.duration != null || topic.duration > 0 ? topic.duration : "No time"}{topic.duration_measure=== 'minutes' ? 'm' : ''}{topic.duration_measure=== 'hours' ? 'h' : ''}</span>
+                                                        </div>
+                                                    </div>
+                                                    <p className="widget-49-meeting-points">Total questions: { topic.questions ? topic.questions.length : 'No'}</p>
+                                                    <div className="widget-49-meeting-action text-start">
+                                                        {/* <a href="#" className="btn btn-sm btn-flash-border-primary">Take quiz<i className="fa fa-play text-white mx-2" aria-hidden="true"></i></a> */}
+                                    
+                                                        {/* <Button href={route('take-quiz', quize.id)} variant="outline-dark" size="sm"> */}
+                                                        <Link href={route('take-quiz', topic.id)} className='btn btn-outline-dark btn-sm' >
+                                                            Take quiz
+                                                            <i className="fa fa-play text-white mx-2" aria-hidden="true"></i>
+                                                        </Link> 
+                                                        {/* </Button>  */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div> : ''}
                 </Container>
             </div>
         </Authenticated>
+        </>
         );
     }
 }

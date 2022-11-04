@@ -1,42 +1,53 @@
-import React from 'react'
+import axios from 'axios';
+import React, { Component, useState } from 'react';
 
-const Timer = ({hoursMinSecs}) => {
-    const [mytime,setMytime] = React.useState();
-    const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
-    const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
+class Timer extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        seconds: parseInt(props.startTimeInSeconds, 10) || 0
+      };
+    }
+  
+    tick() {
+      this.setState(state => ({
+        seconds: state.seconds - 1
+      }));
+    }
+  
+    componentDidMount() {
+      
+      this.interval = setInterval(() => this.tick(), 1000);
+    }
+  
+    componentWillUnmount() {
+      clearInterval(this.interval);
+    }
+  
     
 
-    const tick = () => {
-        if (hrs === 0 && mins === 0 && secs === 0){
-            setMytime($('#timers').text());
-        }else if (mins === 0 && secs === 0) {
-            setTime([hrs - 1, 59, 59]);
-        } else if (secs === 0) {
-            setTime([hrs, mins - 1, 59]);
-        } else {
-            setTime([hrs, mins, secs - 1]);
-        }
-    };
-
-
-    const reset = () => setTime([parseInt(hours), parseInt(minutes), parseInt(seconds)]);
-
-    
-    React.useEffect(() => {
-        const timerId = setInterval(() => tick(), 1000);
-        $('#timerData').val(mytime);
-        return () => clearInterval(timerId);
-    });
-
-    
-    return (
-        <div>
-            <input type="hidden" name='timerData' id='timerData'/>
-            <p className='timerQuize' id='timers' >{`${hrs.toString().padStart(2, '0')}:${mins
-            .toString()
-            .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`}</p> 
-        </div>
-    );
+    formatTime(secs) {
+      const myQuizTimers = $('#myQuizTimers').text();
+      $('#endtime').val(myQuizTimers);
+      $('#submitted_at').val(myQuizTimers);
+      let hours   = Math.floor(secs / 3600);
+      let minutes = Math.floor(secs / 60) % 60;
+      let seconds = secs % 60;
+      return [hours, minutes, seconds]
+          .map(v => ('' + v).padStart(2, '0'))
+          .filter((v,i) => v !== '00' || i > 0)
+          .join(':');
+    }
+  
+    render() {
+      return (
+        <>
+          <input type="hidden" name='endtime' id='endtime' onChange={this.props.onChangeValue}/>
+          <div id='myQuizTimers'>
+            {this.formatTime(this.state.seconds)}
+          </div>
+        </>
+      );
+    }
 }
-
 export default Timer;

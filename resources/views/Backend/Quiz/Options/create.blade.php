@@ -1,22 +1,19 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active"><a href="{{ route('questions.index') }}">Quize</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('questions.index') }}">Questions</a></li>
-    <li class="breadcrumb-item active">Create Option</li>
+    <li><a href="{{ route('questions.index') }}">Quize</a></li>
+    <li><a href="{{ route('questions.index') }}">Questions</a></li>
+    <li>Create Option</li>
 @endsection
 
 @section('css')
 <!-- Select2 -->
-<link rel="stylesheet" href="{{ asset('css/Backend/custom.css') }}">
-<link rel="stylesheet" href="{{ asset('admin-lte/plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('traders-assets/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('traders-assets/css/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('content')
 <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="card">
-        
         <div class="card-header">
             <h3 class="card-title">Create Option</h3>
         </div>
@@ -25,251 +22,177 @@
                 @csrf
                 <input type="hidden" name="is_opt_img" value="{{ $question->opt_img }}"/>
                 <div class="row">
-                    {{-- <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="que_id">Question</label>
-                            <select class="form-control" id="opt_type" name="opt_type">
-                                <option value="single">Single</option>
-                                <option value="multiple">Multiple</option>
-                            </select>
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="duration" class="form-label"><strong>Question</strong></label>
+                            </div>
                         </div>
-                    </div> --}}
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="que_id">Question</label>
-                            {{-- <select class="form-control questions @error('que_id') is-invalid @enderror" name="que_id">
-                                @if ( $question )
-                                    <option value="{{ $question->id }}"> {{ $question->question }} </option>
+                        <input type="hidden" name="que_id" value="{{ $question->id }}">
+                        <textarea id="question" name="question" class="form-control custom-control @error('question') danger-box @enderror" placeholder="Write question..." disabled>{{ $question->question }}</textarea>
+                        @error('question')
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    @if( $question->que_type == 'single' )
+                        @for ($i = 1; $i <= 4; $i++)
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <label for="que_img" class="form-label"><input type="radio" class="form-check-input single_choice_0 @error('single_choice_ans') danger @enderror" name="single_choice_0" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0"> <strong>Option {{$i}}</strong> </label>
+                                    </div>
+                                </div>
+                                @if( $question->opt_img == 0 )
+                                    {{-- <input type="text" id="single_choice_ans" class="form-control custom-control @error('single_choice_ans[]') danger-box @enderror" name="single_choice_ans[]"> --}}
+                                    <textarea id="single_choice_ans" name="single_choice_ans[]" class="form-control custom-control single_choice_ans @error('single_choice_ans') danger-box @enderror" placeholder="Write answer..."></textarea>
+                                @else    
+                                    <input type="file" class="file file-{{$i}} opt-img-fl" id="opt_img-{{$i}}" name="single_choice_ans_img[]" data-id="{{$i}}">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control custom-control" disabled placeholder="Upload File" id="file-{{$i}}">
+                                        <div class="input-group-append">
+                                            <button type="button" class="browse butn-primary browse-{{$i}}" data-id="{{$i}}">Browse</button>
+                                            <!-- <input class="form-control" type="file" id="formFileMultiple" multiple> -->
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 que-img-section-{{$i}}" style="display: none;">
+                                        <div class="d-flex justify-content-between align-items-center ">
+                                            <label for="" class="form-label"><strong>Preview Image</strong></label>
+                                        </div>
+                                        <div class="preview-img-{{$i}}">
+                                            <span class="pip">
+                                                <img class="imageThumb-{{$i}}" title="" style='max-height: 250px;'>
+                                                <button type="button" class="btn btn-danger custom-btn remove-que-img" title="Remove option image"><i class="fas fa-times"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @error('single_choice_ans')
+                                        <span class="error-text" role="alert">{{ $message }}</span>
+                                    @enderror
+                                    @error('single_choice_0')
+                                        <span class="error-text" role="alert">{{ $message }}</span>
+                                    @enderror
                                 @endif
-                            </select> --}}
-                            <input type="hidden" name="que_id" value="{{ $question->id }}">
-                            <input type="text" id="question_name" class="form-control @error('que_id') is-invalid @enderror" name="question_name" value="{{ $question->question }}" readonly>
-                            @error('que_id')
-                                <span id="que_id-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="single_choice_ans">Options</label>
-                        {{-- <span class="float-right">
-                            <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" id="customCheckbox1" name="is_image_opt" value="0">
-                                <label for="customCheckbox1" class="custom-control-label">Option image</label>
-                              </div>
-                        </span> --}}
-                        <div class="row">
-                            @if( $question->que_type == 'single' )
-                                @for ($i = 1; $i <= 4; $i++)
-                                    <div class="col-md-6">
-                                        @if( $question->opt_img == 0 )
-                                            <div class="form-group">
-                                                <div class="input-group _single_ans">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <input type="radio" class="single_choice_0 @error('single_choice_ans[]') is-invalid @enderror" name="single_choice_0" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
-                                                        </span>
-                                                    </div>
-                                                    <input type="text" id="single_choice_ans" class="form-control @error('single_choice_ans[]') is-invalid @enderror" name="single_choice_ans[]">
-                                                    @error('single_choice_ans[]')
-                                                        <span id="single_choice_ans-error" class="error invalid-feedback">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        @else    
-                                            <div class="form-group _single_ans_img">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <input type="radio" class="single_choice_0" name="single_choice_0" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
-                                                        </span>
-                                                    </div>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input opt-img" id="opt_img-{{$i}}" name="single_choice_ans_img[]">
-                                                        <label class="custom-file-label" for="que_img">Choose file</label>
-                                                    </div>
-                                                </div>
-                                                @error('que_img')
-                                                    <span id="que_img-error" class="error invalid-feedback">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        @endif    
+                            </div>
+                        @endfor
+                    @else
+                        @for ($i = 1; $i <= 4; $i++)
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <label for="que_img" class="form-label"><input class="form-check-input ms-0" type="checkbox" id="flexCheckChecked" name="multi_choice_0[]" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0"> <strong>Option {{$i}}</strong></label>
                                     </div>
-                                @endfor
-                            @else
-                                @for ($i = 1; $i <= 4; $i++)
-                                    <div class="col-md-6">
-                                        @if( $question->opt_img == 0 )
-                                            <div class="form-group">
-                                                <div class="input-group _single_ans">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <input type="checkbox" class="" name="multi_choice_0[]" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
-                                                        </span>
-                                                    </div>
-                                                    <input type="text" id="single_choice_ans" class="form-control @error('single_choice_ans[]') is-invalid @enderror" name="single_choice_ans[]">
-                                                    @error('single_choice_ans[]')
-                                                        <span id="single_choice[]_ans-error" class="error invalid-feedback">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="form-group _single_ans_img">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <input type="checkbox" class="" name="multi_choice_0[]" onclick="selectOption({{$i}})" value="{{ $opt_count->id + $i }}" data-id="0">
-                                                        </span>
-                                                    </div>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input opt-img" id="opt_img-{{$i}}" name="single_choice_ans_img[]">
-                                                        <label class="custom-file-label" for="que_img">Choose file</label>
-                                                    </div>
-                                                </div>
-                                                @error('que_img')
-                                                    <span id="que_img-error" class="error invalid-feedback">{{ $message }}</span>
-                                                @enderror
-                                            </div>         
-                                        @endif
+                                </div>
+                                @if( $question->opt_img == 0 )
+                                    {{-- <input type="text" id="single_choice_ans" class="form-control custom-control @error('single_choice_ans[]') danger-box @enderror" name="single_choice_ans[]"> --}}
+                                    <textarea id="single_choice_ans" name="single_choice_ans[]" class="form-control custom-control single_choice_ans @error('question') danger-box @enderror" placeholder="Write answer..."></textarea>
+                                @else
+                                    <input type="file" class="file file-{{$i}} opt-img-fl" id="opt_img-{{$i}}" name="single_choice_ans_img[]" data-id="{{$i}}">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control custom-control" disabled placeholder="Upload File" id="file-{{$i}}">
+                                        <div class="input-group-append">
+                                            <button type="button" class="browse butn-primary browse-{{$i}}" data-id="{{$i}}">Browse</button>
+                                            <!-- <input class="form-control" type="file" id="formFileMultiple" multiple> -->
+                                        </div>
                                     </div>
-                                @endfor    
-                            @endif
-                        </div>
+                                    <div class="mt-2 que-img-section-{{$i}}" style="display: none;">
+                                        <div class="d-flex justify-content-between align-items-center ">
+                                            <label for="" class="form-label"><strong>Preview Image</strong></label>
+                                        </div>
+                                        <div class="preview-img-{{$i}}">
+                                            <span class="pip">
+                                                <img class="imageThumb-{{$i}}" title="" style='max-height: 250px;'>
+                                                <button type="button" class="btn btn-danger custom-btn remove-que-img" title="Remove option image"><i class="fas fa-times"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @error('que_img')
+                                        <span class="error-text" role="alert">{{ $message }}</span>
+                                    @enderror
+                                @endif      
+                            </div>
+                        @endfor
+                    @endif
+                    
+                    <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-4">
+                        <button type="submit" class="btn btn-primary custom-btn">Create</button>
                     </div>
-                </div>
-                <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="question-img">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Default Modal</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>One fine body&hellip;</p>
-        </div>
-      </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
 @endsection
 
 @section('js')
-<!-- Select2 -->
-<script src="{{ asset('admin-lte/plugins/select2/js/select2.full.min.js') }}"></script>
-<!-- bs-custom-file-input -->
-<script src="{{ asset('admin-lte/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
-<script type="text/javascript">
+<script src="{{ asset('traders-assets/js/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+<script>
     $(document).ready(function() {
-
-        $(function () {
-            bsCustomFileInput.init();
+        tinymce.init({
+            selector: 'textarea#question, textarea.single_choice_ans', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: 'code table lists',
+            toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table',
         });
 
-        // Select2Ajax
-        $('.questions').select2({
-            placeholder: "Choose topic...",
-            theme: 'bootstrap4',
-            minimumInputLength: 3,
-            ajax: {
-                url: '{{ route("getQuestions") }}',
-                type: 'post',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    var query = {
-                        _token: "{{ csrf_token() }}",
-                        search: $.trim(params.term),
-                        type: 'public'
-                    }
-
-                    // Query parameters will be ?search=[term]&type=public
-                    return query;
-                },
-                processResults: function (response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            },
-            templateResult: formatRepo,
-            templateSelection: formatRepoSelection
+        $(document).on("click", ".browse", function() {
+            var file_id = $(this).data('id');
+            var file = $(".browse-"+file_id).parents().find(".file-"+file_id);
+            file.trigger("click");
         });
 
-        function formatRepo (repo) {
-            if (repo.loading) {
-                return repo.text;
-            }
+    });
+    
+    // Select2Ajax
+    
 
-            var $container = $(
-                "<div class='select2-result-repository clearfix'>" +
-                "<div class='select2-result-repository__meta'>" +
-                    "<div class='select2-result-repository__title'></div>" +
-                "</div>" +
-                "</div>"
-            );
+    // $('input[type="file"]').on("change",function(e) {
+    //     var fileName = e.target.files[0].name;
+    //     $("#file").val(fileName);
+    
+    //     var reader = new FileReader();
+    //     reader.onload = function(e) {
+    //     // get loaded data and render thumbnail.
+    //     // document.getElementById("preview").src = e.target.result;
+    //         $('#preview-image-before-upload').attr('src', e.target.result);
+    //         $('.post_img_prv').show();
+    //     };
+    //     // read the image file as a data URL.
+    //     reader.readAsDataURL(this.files[0]);
+    // });
 
-            $container.find(".select2-result-repository__title").text(repo.question);
+    
 
-            return $container;
+    //Function for preview image 
+    $(".opt-img-fl").on("change", function(e) {
+        var flId = $(this).data('id');
+        var files = e.target.files, filesLength = files.length;
+        var f = files[0]
+        let extension = f.name.match(/(?<=\.)\w+$/g)[0].toLowerCase();
+        $("#file-"+flId).val(f.name);
+        if (extension === 'jpg' || extension === 'png') {
+            var fileReader = new FileReader();
+            fileReader.onload = (function(e) {
+                var file = e.target;
+                // $('.preview-img').append("<span class=\"pip\">" +
+                //     "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/ style='max-height: 250px;'>" +
+                //     "<br/><button type=\"button\" class=\"btn btn-danger custom-btn remove-que-img\" title=\"Remove image\"><i class=\"fas fa-times\"></i></button>" +
+                //     "</span>");
+                $('.imageThumb-'+flId).attr('src', e.target.result);
+                $(".remove-que-img").click(function(){
+                    $(this).parent(".pip").remove();
+                    e.target.value = ''
+                    $('#que_img').attr('value', '');
+                    $('#file-'+flId).val('');
+                    $('.que-img-section').hide();
+                });
+            });
+            fileReader.readAsDataURL(f);
+            $('.que-img-section-'+flId).show();
+        }else{
+            e.target.value = '';
+            alert('Wrong file extension! Please upload only jpg, jpeg, png image.');
+            $('.que-img-section').hide();
         }
-
-        function formatRepoSelection (repo) {
-            return repo.question || repo.text;
-        }
-
-        // Add and remove dynamic input groups for answer
-
-        var max_fields = 10; //maximum input boxes allowed
-        var wrapper = $(".input_fields_wrap"); //Fields wrapper
-        var add_button = $(".add_field_button"); //Add button ID
-        var que_id = $('#que_id').val();
-        $('#opt_type').on('change', function(){
-            var type = $(this).val();
-            if( type == 'multiple' ) {
-                $('.multi_ans').show();
-                $('._multi_ans').show();
-                $('.single_ans').hide();
-                $('._single_ans').hide();
-            } else {
-                $('.multi_ans').hide();
-                $('._multi_ans').hide();
-                $('.single_ans').show();
-                $('._single_ans').show();
-            }
-        });
-
-        var x = 1; //initlal text box count
-        $(add_button).click(function(e) { //on add input button click
-            e.preventDefault();
-            if (x < max_fields) { //max input box allowed
-                 //text box increment
-                // console.log(x);
-                if($('#opt_type').val() == 'multiple'){
-                    $(wrapper).append('<div class="form-group _multi_ans"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><input type="checkbox" name="multi_choice[]"></span></div><input type="text" id="multi_choice_ans" class="form-control" name="multi_choice_ans[]"><button type="button" class="btn btn-tool text-danger remove_field"><i class="fas fa-times"></i></button></div></div>'); //add input box
-                } else {
-                    $(wrapper).append('<div class="form-group _single_ans"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><input type="radio" class="single_choice_0" name="single_choice_0[]" onclick="selectOption('+x+')" value="0" data-id="'+x+'"></span></div><input type="text" id="single_choice_ans" class="form-control" name="single_choice_ans[]"><button type="button" class="btn btn-tool text-danger remove_field"><i class="fas fa-times"></i></button></div></div>'); //add input box
-                }
-                x++;
-            }
-        });
-
-        $(wrapper).on("click", ".remove_field", function(e) { //user click on remove text
-            e.preventDefault();
-            $(this).parent('div').remove();
-            x--;
-        });
-        
     });
 
     function selectOption(id) {
@@ -285,17 +208,29 @@
         });
     }
 
-    // $('#customCheckbox1').on('click', function(){
-    //     let isChecked = $(this).is(':checked');
-    //     if( isChecked ){
-    //         $(this).val(1);
-    //         $('._single_ans_img').show();
-    //         $('._single_ans').hide();
-    //     } else {
-    //         $(this).val(0);
-    //         $('._single_ans').show();
-    //         $('._single_ans_img').hide();
-    //     }
-    // });
+    $('.dur_minus, .pass_minus').click(function () {
+        var $input = $(this).parent().find('input');
+        var count = parseInt($input.val()) - 1;
+        count = count < 0 ? 1 : count;
+        $input.val(count);
+        $input.change();
+        return false;
+    });
+    $('.dur_plus, .pass_plus').click(function () {
+        var $input = $(this).parent().find('input');
+        $input.val(parseInt($input.val()) + 1);
+        $input.change();
+        return false;
+    });
+
+    $(".opt_img").on('click',function(){
+        if($(this).is(':checked')){
+            $(this).val(1);
+            $(this).attr('checked', true);
+        }else{
+            $(this).val(0);
+            $(this).attr('checked', false);
+        }
+    });
 </script>
 @endsection

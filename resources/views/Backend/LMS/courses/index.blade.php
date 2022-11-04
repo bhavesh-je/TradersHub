@@ -1,121 +1,99 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active">LMS</li>
-    <li class="breadcrumb-item active">Courses</li>
+    <li><a href="{{ route('courses.index') }}">LMS</a></li>
+    <li>Courses</li>
 @endsection
-@section('css')
-    <link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@section('create-button')
+<a href="{{ route('courses.create') }}" class="btn btn-success btn-sm me-0 mb-2">Create Course</a>
 @endsection
-@section('content')
-<div class="col-12">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Courses</h3>
-            <div class="card-tools">
-                <a href="{{ route('courses.create') }}" class="btn btn-success btn-sm">Create Courses</a>
-            </div>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <i class="icon fas fa-check"></i> {{ session('success') }}
-            </div>
-            @endif
 
-            <table id="courses_table" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Course name</th>
-                        <th class="text-center">Course categories</th>
-                        <th class="text-center">Course for</th>
-                        {{-- <th>Course video</th> --}}
-                        <th class="text-center">Course price</th>
-                        <th class="text-center">Course expire</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $i = 1; @endphp
-                    @foreach ( $courses as $key => $course )
-                    <tr>
-                        <td>{{ $i }}</td>
-                        <td>{{ $course->course_name }}</td>
-                        {{-- <td>@if(!empty($course->course_video_link))
-                                {{ $course->course_video_link }}
-                            @else
-                                <label class="text-info">No video link</label>
+@section('css')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+@endsection
+
+@section('content')
+<div class="table-responsive">
+    <table id="courses_table" class="table d-table" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Course name</th>
+                <th>Course categories</th>
+                <th>Course for</th>
+                <th>Course price</th>
+                <th>Course expire</th>
+                <th width="200px">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $i = 1; @endphp
+            @foreach ( $courses as $key => $course )
+            <tr>
+                <td class="table-id">{{ $i }}</td>
+                <td>{{ $course->course_name }}</td>
+                {{-- <td>@if(!empty($course->course_video_link))
+                        {{ $course->course_video_link }}
+                    @else
+                        <label class="text-info">No video link</label>
+                    @endif
+                </td> --}}
+                <td class="text-center">
+                    @if( $course->cat_id != "null" )
+                        @foreach( $categories as $key => $category )
+                            @if(in_array($category->id, json_decode($course->cat_id)))
+                                <span class="badge glow-info bg-info mt-3">{{ $category->c_c_name }}</span>
                             @endif
-                        </td> --}}
-                        <td class="text-center">
-                            @if( $course->cat_id != "null" )
-                                @foreach( $categories as $key => $category )
-                                    @if(in_array($category->id, json_decode($course->cat_id)))
-                                        <span class=" badge bg-info">{{ $category->c_c_name }}</span>
-                                    @endif
-                                @endforeach
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            @if( !empty( $course->course_subscription ) )
-                                @if( $course->course_subscription == 1)
-                                    <span class=" badge rounded-pill bg-info">Master package</span>
-                                @elseif( $course->course_subscription == 2 )
-                                    <span class=" badge rounded-pill bg-danger">Standard package</span>
-                                @else
-                                    <span class=" badge rounded-pill bg-primary">Basic package</span>
-                                @endif
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            @if( $course->course_price && $course->course_sale_price )
-                                <label class="">{{ $course->course_sale_price }}  <small> <del>{{ $course->course_price }}</del> </small></label>
-                            @elseif( $course->course_price && empty( $course->course_sale_price ) )
-                                <label class="">{{ $course->course_price }}</label>
-                            @elseif( empty( $course->course_price ) && empty( $course->course_sale_price ) )
-                                <label class="">Free</label>
-                            @endif
-                        </td>
-                        <td class="text-center"> @if( $course->expiration && $course->course_expiration_day)
-                                {{ date('d-m-Y', strtotime($course->created_at.' + '.$course->course_expiration_day.' days'))}}
-                            @else
-                                <label>No time limit</label>
-                            @endif
-                        </td>
-                        <td colspan="2" class="text-center">
-                            <form action="{{ route('courses.destroy', $course->id) }}" method="POST">
-                                <a class="btn btn-sm btn-outline-info" href="{{ route('courses.show', $course->id) }}">Preview</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{{ route('courses.edit', $course->id) }}">Edit</a>
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger show-alert-delete-box btn-sm mt-2" data-toggle="tooltip" title='Delete'>Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @php $i++ @endphp
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        @endforeach
+                    @endif
+                </td>
+                <td class="text-center">
+                    @if( !empty( $course->course_subscription ) )
+                        @if( $course->course_subscription == 1)
+                            <span class="badge glow-info bg-info">Master package</span>
+                        @elseif( $course->course_subscription == 2 )
+                            <span class="badge glow-success bg-success">Standard package</span>
+                        @else
+                            <span class="badge glow-primary bg-primary">Basic package</span>
+                        @endif
+                    @endif
+                </td>
+                <td class="text-center">
+                    @if( $course->course_price && $course->course_sale_price )
+                        <label class="">${{ $course->course_sale_price }}  <small> <del>${{ $course->course_price }}</del> </small></label>
+                    @elseif( $course->course_price && empty( $course->course_sale_price ) )
+                        <label class="">${{ $course->course_price }}</label>
+                    @elseif( empty( $course->course_price ) && empty( $course->course_sale_price ) )
+                        <label class="">Free</label>
+                    @endif
+                </td>
+                <td class=""> @if( $course->expiration && $course->course_expiration_day)
+                        {{ date('d-m-Y', strtotime($course->created_at.' + '.$course->course_expiration_day.' days'))}}
+                    @else
+                        <label>No time limit</label>
+                    @endif
+                </td>
+                <td class="">
+                    <form action="{{ route('courses.destroy', $course->id) }}" method="POST">
+                        <a class="btn btn-info custom-btn btn-sm" href="{{ route('courses.show', $course->id) }}"><i class="fas fa-eye"></i></a>
+                        <a class="btn btn-sm btn-primary custom-btn" href="{{ route('courses.edit', $course->id) }}"><i class="fas fa-edit"></i></a>
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger custom-btn show-alert-delete-box btn-sm" title='Delete'><i class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            @php $i++ @endphp
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection
 
 @section('js')
-<script src="{{ asset('admin-lte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
-<script>
-    $(function () {
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <script>
         $('#courses_table').DataTable({
             "paging": true,
             "lengthChange": false,
@@ -124,28 +102,32 @@
             "info": true,
             "autoWidth": false,
             "responsive": true,
-        });
-    });
-</script>
-<script type="text/javascript">
-    $('.show-alert-delete-box').on('click',function(event){
-        var form =  $(this).closest("form");
-        var name = $(this).data("name");
-        event.preventDefault();
-        swal({
-            title: "Are you sure you want to delete this record?",
-            text: "If you delete this, it will be gone forever.",
-            icon: "warning",
-            type: "warning",
-            buttons: ["Cancel","Yes!"],
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((willDelete) => {
-            if (willDelete) {
-                form.submit();
+            "language": {
+              "paginate": {
+                "previous": '<i class="fas fa-chevron-left"></i>',
+                "next": '<i class="fas fa-chevron-right"></i>'
+              }
             }
         });
-    });
-</script>
+
+        $('.show-alert-delete-box').on('click',function(event){
+            var form =  $(this).closest("form");
+            var name = $(this).data("name");
+            event.preventDefault();
+            swal({
+                title: "Are you sure you want to delete this record?",
+                text: "If you delete this, it will be gone forever.",
+                icon: "warning",
+                type: "warning",
+                buttons: ["Cancel","Yes!"],
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((willDelete) => {
+                if (willDelete) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
 @endsection

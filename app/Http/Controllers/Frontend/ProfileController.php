@@ -11,6 +11,11 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -75,23 +80,51 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        // dd($request->file('profile_img'));
+      
         // $updatePR = User::where('id',$request->id)->update(['name'=>$request->name]);
         // $updatePR = new User();
+        // dd($request->file('profile_img'));
+        
+        if($request->country == null){
+            $country = $request->selectedcuntrycode;
+            $region = $request->selectedregion;
+            $city = $request->selectedcity;
+        }else{
+            $country = $request->country;
+            $region = $request->region;
+            $city = $request->city;
+        }
         $updatePR = [
             "name" => $request->name,
-            "email" => $request->email
+            "email" => $request->email,
+            'location' => $country.",". $region.",". $city,
+            "portfolio_website_url" => $request->weburl,
+            "details" => $request->details,
         ];
 
+        if($request->newpassword != null){
+            if($request->confirmed != null){
+                $newpassword = Hash::make($request->newpassword);
+                if($request->newpassword === $request->confirmed){
+                    User::where('id',$request->id)->update(['password'=>$newpassword]);
+                    return response()->json(['succes'=>"Your password has been updated successfully!"]);
+                } else {
+                    return response()->json(['errors'=>["confirmed"=> "Your new password or confirmed password is not matched!"]]);
+                }
+            }else{
+                return response()->json(['errors'=>["confirmed"=> "please enter your confirmed password!"]]);
+            }
+        }
+        
         if( $request->file('profile_img') != null ){
             $file = $request->file('profile_img');
             $filename = str_replace(" ","_",$request->name).'_'.time().'.'.$file->extension();
             $file->move(public_path('uploads/users-profile'), $filename);
             $updatePR['profile_img'] = $filename;
         }
+
         // dd($updatePR);
         User::where('id',$request->id)->update($updatePR);
-        // return Inertia::render('Profile',['success'=>"Profile has been Upadated Successfully!"]);
         return response()->json(['success'=>"Profile has been Upadated Successfully!"]);
     }
 
@@ -101,15 +134,14 @@ class ProfileController extends Controller
         $checkemail = User::where(['id'=>$request->id])->firstOrFail();
         $checkPass = Hash::check($request->currentpassword, $checkemail->password);
         $newpassword = Hash::make($request->newpassword);
-        // dd($newpassword);
         if($checkPass){    
             if($request->newpassword === $request->confirmed){
                 // User::where('id',$request->id)->update(['password'=>$newpassword]);
                 return response()->json(['succes'=>array("Your password has been updated successfully!")]);
-            }else{
+            } else {
                 return response()->json(['errors'=>array("Your new password or confirmed password is not matched!")]);
             }
-        }else{
+        } else {
             return response()->json(['errors'=>"Your current password is wrong!"]);
         }
     }

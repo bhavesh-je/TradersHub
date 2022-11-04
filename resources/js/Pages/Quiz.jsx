@@ -19,39 +19,92 @@ class Quiz extends Component{
         return(
             <>
             <Authenticated auth={this.props.auth} errors={this.props.errors} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Quize</h2>} >
-                <Head title="Quize" />
-                <div className="py-12">
-                    <Container>
-                        <Row className="justify-content-md-center" xs={2} md={3}>
-                            {this.state.quizes.map((quize, index) => (
-                                <Col key={quize.id}>
-                                    <Card>
-                                        <Card.Body>
-                                            <Card.Title>{quize.topic_name}</Card.Title>
-                                            <Card.Text>
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <h6 className='text-muted'><strong>Time:</strong> { quize.duration != null || quize.duration > 0 ? quize.duration : "No time"}{quize.duration_measure=== 'minutes' ? 'm' : ''}{quize.duration_measure=== 'hours' ? 'h' : ''} </h6>
-                                                    </div>
-                                                    <div className="col-md-6 text-right">
-                                                        <h6 className='text-muted'><strong>Marks:</strong> { quize.passing_grade != null || quize.passing_grade > 0 ? quize.passing_grade : "No"}</h6> 
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <h6 className='text-muted'><strong>Total questions:</strong> { quize.questions != null || quize.questions != 0 ? quize.questions.length : 'No'}</h6> 
-                                                    </div>
-                                                    <div className="col-md-12 text-center mt-3">
-                                                        <Button href={route('take-quiz', quize.id)} variant="outline-dark" size="sm">
-                                                            Take quiz
-                                                        </Button> 
-                                                    </div>
+                <div className="quizBtn my-5">
+                    <div className="container">
+                        <div className="row">
+                        {this.state.quizes.map((quize, index) => (
+                            <div className="col-lg-4 my-3" key={quize.id}>
+                                <div className="card card-margin h-100">
+                                    <div className="card-header no-border">
+                                        <h5 className="card-title text-uppercase">{quize.topic_name}</h5>
+                                    </div>
+                                    <div className="card-body pt-0">
+                                        <div className="widget-49">
+                                            <div className="widget-49-title-wrapper">
+                                                <div className="widget-49-date-success">
+                                                    <span className="widget-49-date-day ">{ quize.passing_grade != null || quize.passing_grade > 0 ? quize.passing_grade : "No"}</span>
+                                                    <span className="widget-49-date-month text-uppercase">mark</span>
                                                 </div>
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            ))}
-                        </Row>
-                    </Container>
+                                                <div className="widget-49-meeting-info">
+                                                    <span className="widget-49-pro-title">Time: { quize.duration != null || quize.duration > 0 ? quize.duration : "No time"}{quize.duration_measure=== 'minutes' ? 'm' : ''}{quize.duration_measure=== 'hours' ? 'h' : ''}</span>
+                                                </div>
+                                            </div>
+                                            <p className="widget-49-meeting-points">Total questions: { quize.questions != null || quize.questions != 0 ? quize.questions.length : 'No'}</p>
+                                            <div className="widget-49-meeting-action text-start">
+                                                {/* <a href="#" className="btn btn-sm btn-flash-border-primary">Take quiz<i className="fa fa-play text-white mx-2" aria-hidden="true"></i></a> */}
+                            
+                                                {/* <Button href={route('take-quiz', quize.id)} variant="outline-dark" size="sm"> */}
+                                                <Link href={route('take-quiz', quize.id)} className='btn btn-outline-dark btn-sm' >
+                                                    Take quiz
+                                                    <i className="fa fa-play text-white mx-2" aria-hidden="true"></i>
+                                                </Link> 
+                                                {/* </Button>  */}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                            {/* <div className="col-lg-4 my-3">
+                                <div className="card card-margin h-100">
+                                    <div className="card-header no-border">
+                                        <h5 className="card-title text-uppercase">PHP </h5>
+                                    </div>
+                                    <div className="card-body pt-0">
+                                        <div className="widget-49">
+                                            <div className="widget-49-title-wrapper">
+                                                <div className="widget-49-date-success">
+                                                    <span className="widget-49-date-day">0</span>
+                                                    <span className="widget-49-date-month text-uppercase">mark</span>
+                                                </div>
+                                                <div className="widget-49-meeting-info">
+                                                    <span className="widget-49-pro-title">Time: 10m</span>
+                                                </div>
+                                            </div>
+                                            <p className="widget-49-meeting-points">Total questions: 3</p>
+                                            <div className="widget-49-meeting-action text-start">
+                                                <a href="#" className="btn btn-sm btn-flash-border-warning">Take quiz<i className="fa fa-play text-white mx-2" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-4 my-3">
+                                <div className="card card-margin h-100">
+                                    <div className="card-header no-border">
+                                        <h5 className="card-title text-uppercase">Test1</h5>
+                                    </div>
+                                    <div className="card-body pt-0">
+                                        <div className="widget-49">
+                                            <div className="widget-49-title-wrapper">
+                                                <div className="widget-49-date-success">
+                                                    <span className="widget-49-date-day">0</span>
+                                                    <span className="widget-49-date-month text-uppe text-uppercaserctake a quiz">mark</span>
+                                                </div>
+                                                <div className="widget-49-meeting-info">
+                                                    <span className="widget-49-pro-title">Time: 10m</span>
+                                                </div>
+                                            </div>
+                                            <p className="widget-49-meeting-points">Total questions: 3</p>
+                                            <div className="widget-49-meeting-action text-start">
+                                                <a href="#" className="btn btn-sm btn-flash-border-success">Take quiz<i className="fa fa-play text-white mx-2" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> */}
+                        </div>
+                    </div>
                 </div>
             </Authenticated> 
         </>

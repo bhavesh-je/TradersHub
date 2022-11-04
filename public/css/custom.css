@@ -85,3 +85,37 @@
 .single-footer-widget .footer_menu li:last-child a {
     margin-bottom: 0;
 }
+/* User post like avatars */
+.avatar {
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    height: 48px;
+    width: 48px;
+    transition: all .2s ease-in-out;
+}
+.avatar-xs {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.75rem;
+}
+.avatar-group .avatar {
+    position: relative;
+    z-index: 2;
+    border: 2px solid #fff;
+}
+
+.rounded-circle, .avatar.rounded-circle img {
+    border-radius: 50% !important;
+}
+
+.avatar-group .avatar+.avatar {
+    margin-left: -10px;
+}
+
+.liked-fill {
+    color: #EA5455;
+}

@@ -14,7 +14,7 @@ class TradingController extends Controller
     //
     function __construct()
     {
-        $this->middleware('role:Admin|User|Basic Package User|Master Package User|Standard Package User');
+        $this->middleware(['auth','role:Admin|User|Basic Package User|Master Package User|Standard Package User']);
     }
 
     /**

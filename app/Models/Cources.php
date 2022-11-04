@@ -20,4 +20,19 @@ class Cources extends Model
         'cat_id',
         'course_subscription',
     ];
+    
+    public function CourseTopics()
+    {
+        return $this->hasMany(Topic::class, 'course_id', 'id')->with('questions');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'topic_id', 'id');
+    }
+
+    public function options()
+    {
+        return $this->hasMany(Option::class, 'topic_id', 'id');
+    }
 }

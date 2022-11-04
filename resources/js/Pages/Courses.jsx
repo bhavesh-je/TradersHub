@@ -16,7 +16,54 @@ class Courses extends Component{
         this.priceshow = this.priceshow.bind(this);
     }
 
-    componentDidMount(){}
+    componentDidMount(){
+        $("body").addClass("coursesPage");
+        $('.coursesPage').on('keydown', function(event) {
+            console.log("courses page");
+            console.log(event.keyCode);
+            console.log(event);
+            
+            if(event.keyCode == 123 ) {
+                return false;
+            } 
+
+            if( event.keyCode == 116 || event.keyCode == 93) {
+                event.preventDefault();
+                return false;
+            } 
+
+            if( event.ctrlKey || event.shiftKey || event.keyCode == 73 ) {
+                event.preventDefault();
+                return false;
+            }
+            
+        });
+
+        // Restrict left/right click
+        $('.coursesPage').on("mousedown",function(e){
+            console.log(e.which);
+            e.preventDefault();
+            if( (e.which == 1) || (e.which === 3) ) {
+                return false;
+            }
+        });
+
+        // Restrict left/right click
+        $('.coursesPage').bind("contextmenu",function(e){
+            console.log(e.which);
+            // e.preventDefault();
+            return false;
+        });
+    }
+
+    componentWillUnmount(){
+        
+        $("body").removeClass("coursesPage");
+        $('body').unbind('keydown');
+        $('body').unbind('mousedown');
+        $('body').unbind('contextmenu');
+        // console.log($(location).attr('pathname'));
+    }
 
     recommended(nextProps){}
 
@@ -66,53 +113,43 @@ class Courses extends Component{
         return(
             <Authenticated auth={this.props.auth} errors={this.props.errors} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Courses</h2>} >
                 <Head title="Courses" />
-                <div className="py-12">
-                    <Container>
-                        <Row className="justify-content-md-center">
+                
+                <div className="coursesSec">
+                    <div className=" container-fluid py-5">
+                        {/* <h1 className=" mx-4  text-center couTitle"> Take a Quick Summary About Courses</h1> */}
+                        <div className=" row mx-3 justify-content-center py-3">
                         {this.state.courses.map((course,index)=>(
-                            <div className="py-3 col-sm-4" key={course.id}>
-                                <CardGroup>
-                                    <Card style={{ width: '25rem',height: '25rem'  }}>
-                                        {/* <Card.Img variant="top" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22343%22%20height%3D%22160%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20343%20160%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_181b85f72ed%20text%20%7B%20fill%3A%23999%3Bfont-weight%3Anormal%3Bfont-family%3Avar(--bs-font-sans-serif)%2C%20monospace%3Bfont-size%3A17pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_181b85f72ed%22%3E%3Crect%20width%3D%22343%22%20height%3D%22160%22%20fill%3D%22%23373940%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22127.35416412353516%22%20y%3D%2287.60000019073486%22%3E343x160%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" /> */}
-                                        <div className="ribbon-wrapper ribbon-lg">
-                                            <div className="ribbon bg-primary text-lg">
-                                                Ribbon
-                                            </div>
+                            <div className=" col-md-3 my-3 card-box">
+                                <div className="card">
+                                    {/* <img src="img/card1.png" alt="" className=" card-img-top w-100 img-fluid"/> */}
+                                    <iframe src={course.course_video_link} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <div className=" card-body">
+                                        {/* <h5 className=" card-text">Smart Money</h5> */}
+                                        <h3 className=" card-text">{course.course_name}</h3>
+                                        <div className=" d-flex justify-content-between">
+                                            <p className=" card-text mr-4 text-muted py-3"> 
+                                                {(course.course_content) && (<Card.Text dangerouslySetInnerHTML={{ __html: this.wordsTruncate(course.course_content, 200) }}>
+                                                    </Card.Text> ) }
+                                            </p>
                                         </div>
-                                        <Card.Body>
-                                            <Card.Title>{course.course_name}</Card.Title>
-                                            {(course.course_content) && (<Card.Text dangerouslySetInnerHTML={{ __html: this.wordsTruncate(course.course_content, 200) }}>
-                                                </Card.Text> ) 
-                                            }
-                                        </Card.Body>
-                                        <Card.Footer>
-                                            <div className="row">
-                                                <div className="col-md-8 d-flex flex-column">
-                                                    <small className="text-muted">
-                                                        <strong>Created at:</strong> {moment(course.created_at).fromNow()}
-                                                    </small>
-                                                    { course.expiration != 0 || course.course_expiration_day != null ? 
-                                                    <small className='text-danger'><strong>Expired on:</strong> {moment(this.addDays(course.created_at, course.course_expiration_day)).fromNow()}</small> : ""}
-                                                </div>
-                                                <div className="col-md-4">
-                                                    <div dangerouslySetInnerHTML={{ __html: this.priceshow(course.course_price, course.course_sale_price) }}></div>
-                                                </div>
-                                            </div>
-                                            <div className="row mt-3">
-                                                <div className="col-md-12">
-                                                    <Button href={route('show-courses', course.id)} variant="outline-info" size="sm">
-                                                        View course
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </Card.Footer>
-                                    </Card>
-                                </CardGroup>
-                            </div>
+                                            {/* <a href="#" className=" card-link text-decoration-none text-light" data-toggle="modal" data-target="#modalId">
+                                                <button type="button" href={route('show-courses', course.id)} className="btn btn-primary">
+                                                        More
+                                                </button>
+                                            </a> */}
+                                    </div>
+                                        <Link href={route('show-courses', course.id)} className="btn btn-primary moreBtn">
+                                            View course
+                                        </Link>
+                                </div>
+                            </div>    
                         ))}
-                        </Row>
-                    </Container>
+                        </div>
+                    </div>
                 </div>
+                        {/* </Row>
+                    </Container>
+                </div> */}
             </Authenticated>
         );
     }

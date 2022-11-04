@@ -1,9 +1,8 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active">LMS</li>
-    <li class="breadcrumb-item active">Courses</li>
-    <li class="breadcrumb-item active">Create Courses</li>
+    <li><a href="{{ route('courses.index') }}">LMS</a></li>
+    <li><a href="{{ route('courses.index') }}">Courses</a></li>
+    <li>Create Courses</li>
 @endsection
 @section('content')
 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -12,96 +11,139 @@
             <h3 class="card-title">Create Course</h3>
         </div>
         <div class="card-body">
-            <form method="POST" action="{{ route('courses.store') }}">
+            <form method="POST" action="{{ route('courses.store') }}" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="post_type" value="post">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="course_subscription">Course for</label>
-                            <select class="form-control" id="course_subscription" name="course_subscription">
-                                <option value="3">Basic</option>
-                                <option value="1">Master</option>
-                                <option value="2">Standard</option>
-                            </select>
-                            @error('course_subscription')
-                                <span id="course_subscription-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
-
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="course_name">Course name</label>
-                            <input type="text" class="form-control @error('course_name') is-invalid @enderror" id="course_name" name="course_name" placeholder="Enter name" value="{{ old('course_name') }}">
-                            @error('course_name')
-                                <span id="course_name-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
-
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="course_content">Course content</label>
-                            <textarea id="course_content" name="course_content" class="form-control" rows="3" placeholder="Write content ...">{{ old('course_content') }}</textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="course_video_link">Course video link</label>
-                            <input type="text" class="form-control" id="course_video_link" name="course_video_link" placeholder="Enter vido link" value="{{ old('course_video_link') }}">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="course_price">Course price</label>
-                            <input type="text" class="form-control @error('course_price') is-invalid @enderror" id="course_price" name="course_price" placeholder="Enter price" value="{{ old('course_price') }}">
-                            @error('course_price')
-                                <span id="course_price-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="course_sale_price">Course sale price</label>
-                            <input type="text" class="form-control @error('course_sale_price') is-invalid @enderror" id="course_sale_price" name="course_sale_price" placeholder="Enter sell price" value="{{ old('course_sale_price') }}">
-                            @error('course_sale_price')
-                                <span id="course_sale_price-error" class="error invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="expiration" name="expiration" value="0">
-                                <label for="expiration">Course time limit</label>
+                    <div class="col-md-2 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="course_subscription" class="form-label"><strong>Course for</strong></label>
                             </div>
                         </div>
+                        <div class="row align-items-center">
+                            <div class="col-sm-12">
+                                <select class="form-select custome-select @error('course_subscription') danger @enderror" aria-label="Default select example" id="course_subscription" name="course_subscription">
+                                    <option value="3">Basic</option>
+                                    <option value="1">Master</option>
+                                    <option value="2">Standard</option>
+                                </select>
+                            </div>
+                        </div>
+                        @error('course_subscription')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
                     </div>
-                    <div class="col-md-3" id="course_expire_days_div" style="display: none;">
-                        <div class="form-check">
-                            <label for="course_expiration_day">Course expiration (days)</label>
-                            <input type="text" class="form-control" id="course_expiration_day" name="course_expiration_day" placeholder="Enter days" value="{{ old('course_expiration_day') }}">
+                    <div class="col-md-10">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="name" class="form-label"><strong>Course name</strong></label>
+                            </div>
+                        </div>
+    
+                        <input type="text" class="form-control custom-control @error('course_name') danger-box @enderror" placeholder="Enter post title" id="course_name" name="course_name" value="{{ old('course_name') }}">
+                        @error('course_name')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="course_content" class="form-label"><strong>Course content</strong></label>
+                            </div>
+                        </div>
+                        <textarea id="course_content" name="course_content" class="form-control custom-control @error('course_content') danger-box @enderror" rows="3" placeholder="Write course content ...">{{ old('course_content') }}</textarea>
+                        @error('course_content')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="course_video_link" class="form-label"><strong>Course video link</strong></label>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control custom-control @error('course_video_link') danger-box @enderror" placeholder="Enter youtube video link" id="course_video_link" name="course_video_link" value="{{ old('course_video_link') }}">
+                        @error('course_video_link')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="course_price" class="form-label"><strong>Course price</strong></label>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control custom-control @error('course_price') danger-box @enderror" id="course_price" name="course_price" placeholder="Enter price" value="{{ old('course_price') }}">
+                        @error('course_price')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="course_sale_price" class="form-label"><strong>Course sale price</strong></label>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control custom-control @error('course_sale_price') danger-box @enderror" id="course_sale_price" name="course_sale_price" placeholder="Enter sell price" value="{{ old('course_sale_price') }}">
+                        @error('course_price')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div></div>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input ms-0" type="checkbox" id="expiration" name="expiration" value="0">
+                            <label class="form-check-label" for="expiration">
+                                Course time limit
+                            </label>
                         </div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="form-check">
-                            <label for="">Course categories</label>
-                            <ul>
-                                @foreach ($categories as $category)
-                                    <input class="form-check-input" type="checkbox" id="cat_id-{{ $category->id }}" name="cat_id[]" value="{{ $category->id }}"> <label for="cat_id-{{ $category->id }}">{{ $category->c_c_name }}</label>
-                                    <ul>
-                                        @foreach ($category->childrenCourseCategories as $childCategory)
-                                            @include('Backend.LMS.course-categories.child-categories', ['child_category' => $childCategory])
-                                        @endforeach
-                                    </ul>
-                                @endforeach
-                            </ul>
+                    <div class="col-md-3 mb-3" id="course_expire_days_div" style="display: none;"> 
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="course_expiration_day" class="form-label"><strong>Course expiration (days)</strong></label>
+                            </div>
                         </div>
+                        <input type="text" class="form-control custom-control @error('course_expiration_day') danger-box @enderror" id="course_expiration_day" name="course_expiration_day" placeholder="Enter days" value="{{ old('course_expiration_day') }}">
+                        @error('course_expiration_day')
+                            {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                            <span class="error-text" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-3 mb-3"> 
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="" class="form-label"><strong>Course categories</strong></label>
+                            </div>
+                        </div>
+                        <ul>
+                            @foreach ($categories as $category)
+                                <input class="form-check-input ms-0" type="checkbox" id="cat_id-{{ $category->id }}" name="cat_id[]" value="{{ $category->id }}">
+                                <label class="form-check-label" for="cat_id-{{ $category->id }}">
+                                    {{ $category->c_c_name }}
+                                </label>
+                                <ul>
+                                    @foreach ($category->childrenCourseCategories as $childCategory)
+                                        @include('Backend.LMS.course-categories.child-categories', ['child_category' => $childCategory])
+                                    @endforeach
+                                </ul>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary custom-btn">Create</button>
+                    </div>
             </form>
         </div>
     </div>

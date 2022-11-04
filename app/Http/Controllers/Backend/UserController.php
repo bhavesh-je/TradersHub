@@ -7,10 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use DB;
-use Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -43,7 +44,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
+        $roles = Role::Where('id','!=', 1)->pluck('name','name')->all();
         return view('Backend.users.create',compact('roles'));
     }
 
@@ -55,15 +56,33 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'confirm-password' => 'required|same:password',
+            'roles' => 'required',
+            'details' => 'required'
         ]);
 
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        // $input = $request->all();
+        // $input['password'] = Hash::make($input['password']);
+        
+        $input = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'location' => $request->country.",". $request->region.",". $request->city,
+            'portfolio_website_url' => $request->weburl,
+            'details' => $request->details,
+        ];
+        if ($request->file('profile_img') != null) {
+            $file = $request->file('profile_img');
+            $filename = str_replace(" ","_",$request->name).'_' . time() . '.' . $file->extension();
+            $file->move(public_path('uploads/users-profile'), $filename);
+            $input['profile_img'] = $filename;
+        }
 
         $user = User::create($input);
         $user->assignRole($request->roles);
@@ -92,7 +111,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
+        $roles = Role::Where('id', '!=', 1)->pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
         
         return view('Backend.users.edit',compact('user','roles','userRole'));
@@ -107,19 +126,46 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'password' => 'nullable|same:confirm-password',
+            'confirm-password' => 'nullable|same:password',
+            'roles' => 'required',
+            'details' => 'required',
         ]);
+        if($request->country == null){
+            $country = $request->selectedcuntrycode;
+            $region = $request->selectedregion;
+            $city = $request->selectedcity;
+        }else{
+            $country = $request->country;
+            $region = $request->region;
+            $city = $request->city;
+        }
 
-        $input = $request->all();
-        if(!empty($input['password'])){
-            $input['password'] = Hash::make($input['password']);
+        $input = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'location' => $country.",". $region.",". $city,
+            'portfolio_website_url' => $request->weburl,
+            'details' => $request->details,
+        ];
+
+        if(!empty($request->password)){
+            $input['password'] = Hash::make($request->password);
         }else{
             $input = Arr::except($input,array('password'));
         }
+
+        if ($request->file('profile_img') != null) {
+            $file = $request->file('profile_img');
+            $filename = str_replace(" ","_",$request->name).'_' . time() . '.' . $file->extension();
+            $file->move(public_path('uploads/users-profile'), $filename);
+            $input['profile_img'] = $filename;
+        }
+        // dd($input);
 
         $user = User::find($id);
         $user->update($input);

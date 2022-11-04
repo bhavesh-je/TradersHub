@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\User;
 use DB;
 
 class DashboardController extends Controller
@@ -27,6 +28,8 @@ class DashboardController extends Controller
     public function index()
     {
         //
+        DB::enableQueryLog();
+        $total_users = User::whereHas("roles", function($q){ $q->whereNotIn("id", [1]); })->count();
         return view('Backend.index');
     }
 

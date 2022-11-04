@@ -126,7 +126,6 @@ class QuestionControler extends Controller
             'question' => $request->question,
         ];
         // $topic_name = 
-
         if ($request->file('que_img') != null) {
             $file = $request->file('que_img');
             $filename = 'que_' . time() . '.' . $file->extension();

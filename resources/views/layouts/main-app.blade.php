@@ -1,105 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  {{-- <title>{{ config('app.name', 'Traders Hub') }}</title> --}}
-  <title>Traders Hub</title>
-  <link rel="icon" type="image/png" href="{{ asset('logo/cropped-fav-512x450.png') }}">
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{{ asset('admin-lte/plugins/fontawesome-free/css/all.min.css') }}">
-  <!-- IonIcons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('admin-lte/dist/css/adminlte.min.css') }}">
-  @yield('css')
-</head>
-<!--
-`body` tag options:
 
-  Apply one or more of the following classes to to the body tag
-  to get the desired effect
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Traders Hub | Admin Log in</title>
+    <link rel="icon" type="image/png" href="{{ asset('traders-assets/img/cropped-fav-512x450.png') }}">
 
-  * sidebar-collapse
-  * sidebar-mini
--->
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
-  <!-- Navbar -->
-  @include('partials.nav');
-  <!-- /.navbar -->
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
 
-  <!-- Main Sidebar Container -->
-  @include('partials.sidebar');
+    <!-- Bootstrap Css -->
+    <link rel="stylesheet" href="{{ asset('traders-assets/bootstrap/css/bootstrap.min.css') }}">
+    
+    {{-- <link rel="stylesheet" href="{{ asset('traders-assets/icomoon/style.css') }}" /> --}}
+    
+    <link rel="stylesheet" href="{{ asset('traders-assets/font-awesome/css/font-awesome.min.css') }}" />
+    
+    @yield('css')
+    <link rel="stylesheet" href="{{ asset('traders-assets/css/style.css') }}"/>
+  </head>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <!-- <h1 class="m-0">Dashboard v3</h1> -->
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              @yield('breadcrumb')
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+  <body>
+      <!-- start page container -->
+      <div class="page-container">
+          <!-- start page sidebar -->
+          <div class="page-sidebar">
+              <a class="logo-box" href="#">
+                  <img src="{{ asset('traders-assets/img/admin-logo.png') }}" alt="">
+                  <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
+                  <i class="icon-close" id="sidebar-toggle-button-close"></i>
+              </a>
 
-    <!-- Main content -->
-    <div class="content">
-      <div class="container-fluid">
-        <div class="row justify-content-center">
-          @yield('content')
+              <!-- Main Sidebar Container -->
+              <div class="page-sidebar-inner">
+                @include('partials.sidebar')
+              </div>
+
+          </div>
+          <!-- end page sidebar -->
+          <!-- start page content -->
+          <div class="page-content">
+              <!-- start page header -->
+              <div class="page-header">
+                <!-- Main Navbar Container -->
+                @include('partials.nav')
+              </div>
+              <div class="page-inner">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                {{-- <ol class="breadcrumb">
+                  @yield('breadcrumb')
+                </ol> --}}
+                <div class="breadcrumb">
+                  <ul>
+                    {{-- <li><a href="#"><img src="{{ asset('traders-assets/img/home-icon.png') }}" alt=""></a></li>
+                    <li><a href="#!">Pages</a></li>
+                    <li><a href="#!">User</a></li>
+                    <li><span class="active">User Settings</span></li> --}}
+                    <li><a href="{{ route('dashboard.index') }}"><img src="{{ asset('traders-assets/img/home-icon.png') }}" alt=""></a></li>
+                    @yield('breadcrumb')
+                  </ul>
+                </div>
+                  @yield('create-button')
+              </div>
+                <!-- <div class="page-title">
+                    <h3 class="breadcrumb-header">Statistics Cards</h3>
+                    <p class="mb-0">Horizontal Icon, Vertical Icon, Area Chart, Line Chart & More…</p>
+                </div> -->
+                @yield('content')
+                <div class="page-footer">
+
+                    <p>Copyright &copy; 2022 FU ACADEMY</p>
+                    <!-- <p>Hand-crafted & Made with</p> -->
+                </div>
+            </div>
         </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+      <!-- sidebar -->
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
 
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
-    </div>
-  </footer>
-</div>
-<!-- ./wrapper -->
+      <!-- jQuery -->
 
-<!-- REQUIRED SCRIPTS -->
 
-<!-- jQuery -->
-<script src="{{ asset('admin-lte/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap -->
-<script src="{{ asset('admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- AdminLTE -->
-<script src="{{ asset('admin-lte/dist/js/adminlte.js') }}"></script>
+      <!-- Bootstrap Js -->
+      <script src="{{ asset('traders-assets/js/jquery.min.js') }}"></script>
+      <script src="{{ asset('traders-assets/js/popper/popper.min.js') }}"></script>
+      <script src="{{ asset('traders-assets/bootstrap/js/bootstrap.min.js') }}"></script>
+      <script src="{{ asset('traders-assets/js/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
+      <!-- <script src="traders-assets/js/dashboard.js"></script> -->
+      <script src="{{ asset('traders-assets/js/custome.js') }}"></script>
+      @yield('js')
+  </body>
 
-<!-- OPTIONAL SCRIPTS -->
-{{-- <!-- <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script> --> --}}
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('admin-lte/dist/js/demo.js') }}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('admin-lte/dist/js/pages/dashboard3.js') }}"></script>
-@yield('js')
-</body>
 </html>

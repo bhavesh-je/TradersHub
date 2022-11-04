@@ -17,7 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {   
-        $listPostData = Post::orderBy('id','DESC')->get();
+        $listPostData = Post::where('post_type', 'post')->orderBy('id','DESC')->get();
         return view('Backend.Posts.index',compact('listPostData'));
     }
 
@@ -54,6 +54,7 @@ class PostController extends Controller
         }
         $storePostData->post_author = Auth::user()->id;
         $storePostData->post_title = $request->post_title;
+        $storePostData->post_type = $request->post_type;
         $storePostData->post_content = $request->post_content;
         if($request->post_status){
             $storePostData->post_status =$request->post_status;
@@ -96,14 +97,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         // dd($request);
         $this->validate($request,[
             'post_title' => 'required',
             'post_content' => 'required',
         ]);
-        $updateData = Post::where('id',$request->id)->first();
+        $updateData = Post::where('id',$id)->first();
         if( $request->file('post_image') != null ){
             $file = $request->file('post_image');
             $filename = $request->post_title.'_'.time().'.'.$file->extension();
@@ -114,6 +115,7 @@ class PostController extends Controller
         $updateData->post_title = $request->post_title;
         $updateData->post_content = $request->post_content;
         $updateData->post_status = $request->post_status;
+        $updateData->post_type = $request->post_type;
         $updateData->update();
 
         return redirect()->route('posts.index')->with('success', 'Post has been updated successfully.');

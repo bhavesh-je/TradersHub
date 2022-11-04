@@ -21,8 +21,14 @@ class Topic extends Model
         'passing_grade',
         're_take_cut',
         'topic_subscription',
+        'course_id',
         'created_by',
     ];
+
+    public function courses()
+    {
+        return $this->belongsTo(Cources::class, 'course_id', 'id');
+    }
 
     public function questions()
     {

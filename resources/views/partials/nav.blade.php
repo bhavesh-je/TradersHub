@@ -1,144 +1,123 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
-  <!-- Left navbar links -->
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a href="/admin/dashboard" class="nav-link">Home</a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a href="#" class="nav-link">Contact</a>
-    </li>
-  </ul>
-
-  <!-- Right navbar links -->
-  <ul class="navbar-nav ml-auto">
-    <!-- Navbar Search -->
-    <li class="nav-item">
-      <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-        <i class="fas fa-search"></i>
-      </a>
-      <div class="navbar-search-block">
-        <form class="form-inline">
-          <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group-append">
-              <button class="btn btn-navbar" type="submit">
-                <i class="fas fa-search"></i>
+<div class="search-form">
+  <form action="#" method="GET">
+      <div class="input-group">
+          <input type="text" name="search" class="form-control search-input"
+              placeholder="Type something...">
+          <span class="input-group-btn">
+              <button class="btn btn-default" id="close-search" type="button">
+                  <i class="icon-close"></i>
               </button>
-              <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-        </form>
+          </span>
       </div>
-    </li>
-
-    <!-- Messages Dropdown Menu -->
-    <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
-        <i class="far fa-comments"></i>
-        <span class="badge badge-danger navbar-badge">3</span>
-      </a>
-      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-        <a href="#" class="dropdown-item">
-          <!-- Message Start -->
-          <div class="media">
-            <img src="{{ asset('admin-lte/dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-            <div class="media-body">
-              <h3 class="dropdown-item-title">
-                Brad Diesel
-                <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-              </h3>
-              <p class="text-sm">Call me whenever you can...</p>
-              <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-            </div>
+  </form>
+</div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+      <div class="navbar-header">
+          <div class="logo-sm">
+              <a href="#" id="sidebar-toggle-button"><i class="fas fa-bars"></i></a>
+              <a class="logo-box" href="#"><span>Evince</span></a>
+              <!-- <img src="traders-assets/img/admin-logo2.png" alt=""> -->
           </div>
-          <!-- Message End -->
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-          <!-- Message Start -->
-          <div class="media">
-            <img src="{{ asset('admin-lte/dist/img/user8-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-            <div class="media-body">
-              <h3 class="dropdown-item-title">
-                John Pierce
-                <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-              </h3>
-              <p class="text-sm">I got your message bro</p>
-              <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-            </div>
-          </div>
-          <!-- Message End -->
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-          <!-- Message Start -->
-          <div class="media">
-            <img src="{{ asset('admin-lte/dist/img/user3-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-            <div class="media-body">
-              <h3 class="dropdown-item-title">
-                Nora Silvester
-                <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-              </h3>
-              <p class="text-sm">The subject goes here</p>
-              <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-            </div>
-          </div>
-          <!-- Message End -->
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
+              data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <i class="fa fa-angle-down"></i>
+          </button>
       </div>
-    </li>
-    <!-- Notifications Dropdown Menu -->
-    <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
-        <i class="far fa-bell"></i>
-        <span class="badge badge-warning navbar-badge">15</span>
-      </a>
-      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-        <span class="dropdown-item dropdown-header">15 Notifications</span>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-          <i class="fas fa-envelope mr-2"></i> 4 new messages
-          <span class="float-right text-muted text-sm">3 mins</span>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-          <i class="fas fa-users mr-2"></i> 8 friend requests
-          <span class="float-right text-muted text-sm">12 hours</span>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-          <i class="fas fa-file mr-2"></i> 3 new reports
-          <span class="float-right text-muted text-sm">2 days</span>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+              <li><a href="#" id="collapsed-sidebar-toggle-button"><i class="fas fa-bars"></i></a>
+              </li>
+              <li><a href="#" id="toggle-fullscreen"><i class="fas fa-expand"></i></a></li>
+              <!-- <li><a href="#"><img src="traders-assets/img/checked-icon.png" alt=""></a></li> -->
+              <!-- <li><a href="#"><img src="traders-assets/img/chat-icon.png" alt=""></a></li> -->
+              <li><a href="#"><img src="{{ asset('traders-assets/img/email-icon.png') }}" alt=""></a></li>
+              <!-- <li><a href="#"><img src="traders-assets/img/calander-icon.png" alt=""></a></li> -->
+              <!-- <li><a href="#"><img src="traders-assets/img/star-icon.png" alt=""></a></li> -->
+              <li><a href="#"><img src="{{ asset('traders-assets/img/line.png') }}" alt=""></a></li>
+              <li><a href="#" id="search-button"><img src="{{ asset('traders-assets/img/search-icon.png') }}" alt=""></a></li>
+              <!-- <li><a href="#">Mentors Online <span class="ms-3 avatar-image"><img class="rounded-circle" src="traders-assets/img/avatar-01.png" alt=""><span class="user-status"></span></span></a></li> -->
+              <!-- <li><a href="#"><span class="avatar-image"><img class="rounded-circle" src="traders-assets/img/avatar-01.png" alt=""><span class="user-status"></span></a></li>
+              <li><a href="#"><span class="avatar-image"><img class="rounded-circle" src="traders-assets/img/avatar-01.png" alt=""><span class="user-status"></span></a></li> -->
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <!-- <li><a href="#" class="right-sidebar-toggle" data-sidebar-id="main-right-sidebar"><i
+                          class="fa fa-envelope"></i></a></li> -->
+                          <!-- <li class="dropdown">
+                              <a href="#">
+                              <img src="traders-assets/img/usa-flag.png" alt="">
+                              <span class="mb-0 small text-end">English</span>
+                          </a>
+                          </li> -->
+              <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+                      aria-haspopup="true" aria-expanded="false">
+                      <img class="rounded-circle" src="{{ asset('traders-assets/img/bell-icon.png') }}" alt=""><span class="notification-status">4</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-lg dropdown-content">
+                      <li class="drop-title">Notifications<a href="#" class="drop-title-link">
+                          <i class="fa fa-angle-right"></i></a></li>
+                      <li class="slimscroll dropdown-notifications">
+                          <ul class="list-unstyled dropdown-oc">
+                              <li>
+                                  <a href="#"><span class="notification-badge bg-primary"><i
+                                              class="far fa-image"></i></span>
+                                      <span class="notification-info">Finished uploading photos to
+                                          gallery <b>"South Africa"</b>.
+                                          <small class="notification-date">20:00</small>
+                                      </span></a>
+                              </li>
+                              <li>
+                                  <a href="#"><span class="notification-badge bg-primary"><i
+                                              class="fa fa-at"></i></span>
+                                      <span class="notification-info"><b>John Doe</b> mentioned you in
+                                          a post "Update v1.5".
+                                          <small class="notification-date">06:07</small>
+                                      </span></a>
+                              </li>
+                              <li>
+                                  <a href="#"><span class="notification-badge bg-danger"><i
+                                              class="fa fa-bolt"></i></span>
+                                      <span class="notification-info">4 new special offers from the
+                                          apps you follow!
+                                          <small class="notification-date">Yesterday</small>
+                                      </span></a>
+                              </li>
+                              <li>
+                                  <a href="#"><span class="notification-badge bg-success"><i
+                                              class="fa fa-bullhorn"></i></span>
+                                      <span class="notification-info">There is a meeting with
+                                          <b>Ethan</b> in 15 minutes!
+                                          <small class="notification-date">Yesterday</small>
+                                      </span></a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+              </li>
+              <li class="dropdown user-dropdown ms-3">
+                  <p class="mb-0 avatar-name">{{ Auth::user()->name }}</p>
+                  <p class="mb-0 small text-end">Admin</p>
+              </li>
+              <li class="dropdown user-dropdown">
+                  <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+                      aria-haspopup="true" aria-expanded="false"><span class="avatar-image"><img class="rounded-circle" src="{{ asset('traders-assets/img/avatar-01.png') }}" alt=""><span class="user-status"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{ route('profile.index') }}">Profile</a></li>
+                      <li><a href="#">Calendar</a></li>
+                      <li><a href="#"><span class="badge float-end bg-danger">42</span>Messages</a>
+                      </li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Account Settings</a></li>
+                      <li>
+                        <a href="{{ route('admin_logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
+                        <form id="logout-form" action="{{ route('admin_logout') }}" method="POST" style="display: none;">
+                          @csrf
+                        </form>
+                      </li>
+                  </ul>
+              </li>
+          </ul>
       </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-        <i class="fas fa-expand-arrows-alt"></i>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-        <i class="fas fa-th-large"></i>
-      </a>
-    </li>
-    <!-- Logout -->
-    <li class="nav-item">
-      <a class="nav-link" href="{{ route('admin_logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <i class="fas fa-sign-out-alt"></i>
-      </a>
-      <form id="logout-form" action="{{ route('admin_logout') }}" method="POST" style="display: none;">
-        @csrf
-      </form>
-    </li>
-  </ul>
+  </div>
 </nav>

@@ -10,20 +10,23 @@
 }
 
 .remove-que-img {
-    position: absolute;
+    /* position: absolute;
     top: 8%;
     right: 57%;
     background: #0807078a;
     width: 30px;
     height: 30px;
     line-height: 16px;
-    /* margin: 0px auto; */
-    text-align: center;
+    margin: 0px auto; 
+    text-align: center; */
+    position: absolute;
+    top: 5%;
+    right: 2%;
 }
 
 .remove-que-img:hover{
-    background: #007bff;
-    color: #fff !important;
+    background: #fff;
+    color: #EA5455 !important;
 }
 
 .remove-opt-img {

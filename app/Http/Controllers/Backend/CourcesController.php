@@ -63,11 +63,14 @@ class CourcesController extends Controller
         $validate = $this->validate($request,[
             'course_name' => 'required|max:250',
             'course_content' => 'nullable',
-            'course_video_link' => 'nullable',
+            'course_video_link' => 'nullable|regex:~^(?:https?://)?(?:www[.])?(?:youtube[.]com/embed/)([^&]{11})~x',
             'course_price' => 'nullable|numeric|min:1',
             'course_sale_price' => 'nullable|numeric|min:1',
             'expiration' => 'in:0,1',
             'course_expiration_day' => 'nullable|numeric|min:1',
+        ],
+        [
+            'course_video_link.regex' => 'Entered link is not valid, eg:https://www.youtube.com/embed/xyz',
         ]);
 
         $cat_ids;
@@ -173,12 +176,14 @@ class CourcesController extends Controller
             'course_video_link' => 'nullable',
             'course_price' => 'nullable|numeric|min:1',
             'course_sale_price' => 'nullable|numeric|min:1',
-            'course_expiration_day' => 'nullable|numeric|min:1',
             'expiration' => 'in:0,1',
+            'course_expiration_day' => 'required_if:expiration,==,1|nullable|numeric|min:1',
             'cat_id' => 'nullable'
+        ],
+        [
+            'course_expiration_day.required_if' => 'When Expiration checked then Expiration days can not be null.'
         ]);
         Cources::where('id', $id)->update(['cat_id' =>NULL]);
-
         $Updatecourse = [
             'course_name' => $request->course_name,
             'course_content' => $request->course_content,
@@ -189,14 +194,15 @@ class CourcesController extends Controller
             'cat_id' => json_encode($request->cat_id),
             'course_subscription' => $request->course_subscription,
         ];
+        // dd($Updatecourse);
 
         if( $request->course_expiration_day != '' ){
             $Updatecourse['course_expiration_day'] = $request->course_expiration_day;
         }
 
-        if( $request->course_expiration_day != '' ){
-            $Updatecourse['course_expiration_day'] = $request->expiration;
-        }
+        // if( $request->course_expiration_day != '' ){
+        //     $Updatecourse['course_expiration_day'] = $request->expiration;
+        // }
 
         // dd($Updatecourse);
         Cources::where('id', $id)->update($Updatecourse);

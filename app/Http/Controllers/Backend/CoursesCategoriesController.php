@@ -55,6 +55,9 @@ class CoursesCategoriesController extends Controller
             'c_c_name' => 'required|max:250',
             'description' => 'nullable',
             'parent' => 'nullable',
+        ],
+        [
+            'c_c_name.required' => 'Please enter course category name.'
         ]);
         CourseCategories::create($validate);
         return redirect()->route('course-category.index')->with('success', 'Course category create successfully.');

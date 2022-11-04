@@ -46,9 +46,9 @@ class PermissionController extends Controller
             'name' => 'required|regex:/^[A-Za-z0-9-]+$/|unique:permissions,name',
         ],
         [
-            'name.required' => 'Please enter permission name',
-            'name.regex' => 'Please enter permission name with dash',
-            'name.unique' => 'Permission name has already been taken',
+            'name.required' => 'Please enter permission name.',
+            'name.regex' => 'Please enter permission name with dash.',
+            'name.unique' => 'Permission name has already been taken.',
         ]);
 
         $permission = [

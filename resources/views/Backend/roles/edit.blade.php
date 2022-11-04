@@ -1,49 +1,60 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('roles.index') }}">Roles</a></li>
-    <li class="breadcrumb-item active">Edit Roles</li>
+    <li><a href="{{ route('roles.index') }}">Roles</a></li>
+    <li>Create Roles</li>
 @endsection
 
 @section('content')
 <div class="col-xs-12 col-sm-12 col-md-12">
-    @if (count($errors) > 0)
-    <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-        <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-        </ul>
-    </div>
-    @endif
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Edit Role</h3>
+            <h3 class="card-title">Create Role</h3>
         </div>
         <div class="card-body">
-            {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
-            <div class="form-group">
-                <label for="name">Name</label>
-                {!! Form::text('name', null, array('placeholder' => 'Enter name','class' => 'form-control', 'id' => 'name')) !!}
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Permissions:</label>
-                <div class="row">
-                     @foreach($permission as $value)
-                    <div class="col-sm-2">
-                         <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'name')) }}
-                        {{ $value->name }}</label>
+            <form method="POST" action="{{ route('roles.update', $role->id) }}" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+                <div class="col-md-12 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="name" class="form-label"><strong>Name</strong></label>
+                        </div>
                     </div>
-                    @endforeach
+
+                    <input type="text" id="name" name="name" class="form-control custom-control @error('name') danger-box @enderror" value="{{ $role->name }}" placeholder="Enter name">
+                    @error('name')
+                        {{-- <span id="name-error" class="error invalid-feedback">{{ $message }}</span> --}}
+                        <span class="error-text" role="alert">{{ $message }}</span>
+                    @enderror
+                    {{-- <span class="error text-danger" role="alert">
+                        Caption text, description, error notification
+                    </span> --}}
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
-            {!! Form::close() !!}
+                <div class="col-md-12 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="permissions" class="form-label"><strong>Permissions</strong></label>
+                        </div>
+                    </div>
+                    <div class="form-check mb-2">
+                        <div class="row">
+                            @foreach($permission as $value)
+                                <div class="col-sm-3">
+                                    <input class="form-check-input ms-0" name="permission[]" type="checkbox" value="{{$value->id}}" id="flexCheckChecked" {{ in_array($value->id, $rolePermissions) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="flexCheckChecked">{{ $value->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-5">
+                        <button type="submit" class="btn btn-primary custom-btn">Update</button>
+                    </div>
+                    {{-- <span class="error text-danger" role="alert">
+                        Caption text, description, error notification
+                    </span> --}}
+                </div>
+            </form>
         </div>
     </div>
-
 </div>
 @endsection

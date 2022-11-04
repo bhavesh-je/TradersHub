@@ -15,6 +15,11 @@ use Laravel\Ui\Presets\React;
 
 class QuizController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -100,13 +105,12 @@ class QuizController extends Controller
      */
     public function storeAnswer(Request $request)
     {
+        // dd($request->submitted_at);
         $user_id = $request->user_id;
         $topic_id = $request->topic_id;
         // $submitted_at = date($request->submitted_at, 'H:i:s');
-        // if($request->submitted_at == 
         $submitted_at = \Carbon\Carbon::parse($request->submitted_at)->format('H:i:s');
         $checkisattempts = UserResult::select('is_attempts')->where(['topic_id' => $topic_id, 'user_id' => $user_id])->groupBy('is_attempts')->orderby('is_attempts', 'desc')->first();
-        // dd($request->submitted_at);
         if ($checkisattempts == null) {
             $isattempts = 1;
         } else {
@@ -293,5 +297,14 @@ class QuizController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getQuizTime(Request $request)
+    {
+        // dd($request->all());
+        $TakingQuiz = Topic::where('id', $request->id)->firstOrFail();
+        // dd("hello");
+
+        return response()->json($TakingQuiz);
     }
 }

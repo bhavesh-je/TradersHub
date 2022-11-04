@@ -17,7 +17,9 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->string('post_author');
             $table->string('post_title');
-            $table->longText('post_content');
+            $table->longText('post_content')->nullable();
+            $table->longText('youtube_video_link')->nullable();
+            $table->string('post_video_name')->nullable();
             $table->string('post_image')->nullable();
             $table->tinyInteger('post_status');
             $table->timestamps();

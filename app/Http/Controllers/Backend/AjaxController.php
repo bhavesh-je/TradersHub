@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Option;
+use App\Models\User;
 use File;
 
 class AjaxController extends Controller
@@ -36,5 +37,15 @@ class AjaxController extends Controller
 
         $respons['status'] = "success";
         return response()->json($respons);
+    }
+
+    public function uploadProfileImg(Request $request)
+    {
+        $respons = array();
+        $id = $request->id;
+        $image = $request->img;
+        $delteProfileImg = public_path('uploads/users-profile');
+        File::delete($delteProfileImg.'/'.$image);
+        $removeProfileImg = User::where('id',$id)->update(['profile_img'=>null]);
     }
 }

@@ -1,97 +1,70 @@
 @extends('layouts.main-app')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-    <li class="breadcrumb-item active">Roles</li>
+    <li>Roles</li>
+@endsection
+@section('create-button')
+<a href="{{ route('roles.create') }}" class="btn btn-success btn-sm me-0 mb-2">Create Role</a>
 @endsection
 @section('css')
-<link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('admin-lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 @endsection
-@section('content')
-<div class="col-12">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Roles</h3>
-            <div class="card-tools">
-                <a href="{{ route('roles.create') }}" class="btn btn-success btn-sm">Create Role</a>
-            </div>
+@section('content')    
+<div class="table-responsive">
+  @if(session('success'))
+      <div class="custom-alert">
+        <div class="alert alert-success alert-dismissible " role="alert">
+          <strong><i class="far fa-star me-2"></i>Success!</strong> {{ session('success') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="fas fa-times success me-2"></i></button>
         </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-            <table id="roles-table" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                         <th>Name</th>
-                         <th>Role permissions</th>
-                         <th width="280px" class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $i = 1 @endphp
-                    @foreach ( $roles as $key => $role )
-                    <tr>
-                        <td>{{ $i }}</td>
-                        <td>{{ $role->name }}</td>
-                        <td>
-                            @foreach ($role->permissions as $permissions)
-                                <label class="badge badge-info">{{ $permissions->name }}</label>
-                            @endforeach
-                        </td>
-                        <td class="text-center">
-                            <a class="btn btn-outline-info btn-sm" href="{{ route('roles.show',$role->id) }}">Show</a>
-                            @can('role-edit')
-                                <a class="btn btn-outline-primary btn-sm" href="{{ route('roles.edit',$role->id) }}">Edit</a>
-                            @endcan
-                            @can('role-delete')
-                                {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                                    {!! Form::submit('Delete', ['class' => 'btn btn-outline-danger show-alert-delete-box btn-sm','data-toggle'=>"tooltip","title"=>"Delete"]) !!}
-                                {!! Form::close() !!}
-                            @endcan
-                        </td>
-                    </tr>
-                    @php $i++ @endphp
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+      </div>
+    @endif
+    <table id="role-table" class="table d-table" style="width: 100%;">
+      <thead>
+          <tr>
+              <th class="">#</th>
+              <th width="320px">Name</th>
+              <th>Role permissions</th>
+              <th width="200px">Action</th>
+          </tr>
+      </thead>
+      <tbody>
+      @php $i = 1 @endphp
+      @foreach ( $roles as $key => $role )
+        <tr>
+          <td class="table-id">{{ $i }}</td>
+          <td>{{ $role->name }}</td>
+          <td>
+          @foreach ($role->permissions as $permissions)
+            <span class="badge glow-info bg-info mt-3">{{ $permissions->name }}</span>
+          @endforeach
+          </td>
+          <td>
+            <form action="{{ route('roles.destroy', $role->id) }}" method="POST">
+              <a class="btn btn-dark custom-btn btn-sm" href="{{ route('roles.show',$role->id) }}"><i class="fas fa-eye"></i></a>
+              @can('role-edit')
+              <a class="btn btn-info custom-btn btn-sm" href="{{ route('roles.edit', $role->id) }}"><i class="fas fa-edit"></i></a>
+              @endcan
+              @can('role-delete')
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="btn btn-danger custom-btn show-alert-delete-box btn-sm" data-toggle="tooltip" title='Delete'><i class="fas fa-trash"></i></button>
+              @endcan
+            </form>
+          </td>
+        </tr>
+      @php $i++ @endphp
+      @endforeach  
+      </tbody>
+    </table>
 </div>
 @endsection
 
 @section('js')
-<script src="{{ asset('admin-lte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
-<script type="text/javascript">
-    $('.show-alert-delete-box').on('click',function(event){
-        var form =  $(this).closest("form");
-        var name = $(this).data("name");
-        event.preventDefault();
-        swal({
-            title: "Are you sure you want to delete this record?",
-            text: "If you delete this, it will be gone forever.",
-            icon: "warning",
-            type: "warning",
-            buttons: ["Cancel","Yes!"],
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((willDelete) => {
-            if (willDelete) {
-                form.submit();
-            }
-        });
-    });
-</script>
-<script>
-    $(function () {
-        $('#roles-table').DataTable({
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ asset('admin-lte/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <script>
+        $('#role-table').DataTable({
             "paging": true,
             "lengthChange": false,
             "searching": false,
@@ -99,7 +72,31 @@
             "info": true,
             "autoWidth": false,
             "responsive": true,
+            "language": {
+              "paginate": {
+                "previous": '<i class="fas fa-chevron-left"></i>',
+                "next": '<i class="fas fa-chevron-right"></i>'
+              }
+            }
         });
-    });
-</script>
+        $('.show-alert-delete-box').on('click',function(event){
+          var form =  $(this).closest("form");
+          var name = $(this).data("name");
+          event.preventDefault();
+          swal({
+              title: "Are you sure you want to delete this record?",
+              text: "If you delete this, it will be gone forever.",
+              icon: "warning",
+              type: "warning",
+              buttons: ["Cancel","Yes!"],
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+          }).then((willDelete) => {
+              if (willDelete) {
+                  form.submit();
+              }
+          });
+      });
+    </script>
 @endsection
